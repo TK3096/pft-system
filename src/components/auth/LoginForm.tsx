@@ -57,7 +57,8 @@ export const LoginForm = () => {
 
           router.push(DEFAULT_LOGIN_REDIRECT)
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log(e)
           setError('Something went wrong')
         })
     })
