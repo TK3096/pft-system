@@ -4,6 +4,7 @@ import { Open_Sans } from 'next/font/google'
 import { ThemeProvider } from '@/providers/ThemeProvider'
 
 import { cn } from '@/lib/utils'
+import { STORAGE_THEME_KEY } from '@/lib/constant'
 
 import './globals.css'
 
@@ -13,8 +14,6 @@ export const metadata: Metadata = {
   title: 'PFT System',
   description: 'PFT System',
 }
-
-const STORAGE_THEME_KEY = process.env.STORAGE_THEME_KEY
 
 export default function RootLayout({
   children,
