@@ -4,7 +4,13 @@ import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 
-export const LoginButton = () => {
+interface LoginButtonProps {
+  label: string
+}
+
+export const LoginButton = (props: LoginButtonProps) => {
+  const { label } = props
+
   const router = useRouter()
 
   const handleGoToLoginPage = () => {
@@ -18,7 +24,7 @@ export const LoginButton = () => {
       onClick={handleGoToLoginPage}
       className='w-full'
     >
-      Sign in
+      {label}
     </Button>
   )
 }

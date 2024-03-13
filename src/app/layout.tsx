@@ -3,6 +3,8 @@ import { Open_Sans } from 'next/font/google'
 
 import { ThemeProvider } from '@/providers/ThemeProvider'
 
+import { Toaster } from '@/components/ui/sonner'
+
 import { cn } from '@/lib/utils'
 import { STORAGE_THEME_KEY } from '@/lib/constant'
 
@@ -29,6 +31,7 @@ export default function RootLayout({
           storageKey={STORAGE_THEME_KEY}
         >
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
