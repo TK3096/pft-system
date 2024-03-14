@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Open_Sans } from 'next/font/google'
 
 import { ThemeProvider } from '@/providers/ThemeProvider'
+import { ModalProvider } from '@/providers/ModalProvider'
 
 import { Toaster } from '@/components/ui/sonner'
 
@@ -32,6 +33,7 @@ export default function RootLayout({
         >
           {children}
           <Toaster />
+          <ModalProvider />
         </ThemeProvider>
       </body>
     </html>
