@@ -11,9 +11,9 @@ import { toast } from 'sonner'
 
 import { useModal } from '@/hooks/useModal'
 
-import { EditWorkspaceSchema } from '@/shcemas/tasks-management'
+import { EditBoardSchema } from '@/shcemas/tasks-management'
 
-import { updateWorkspace } from '@/actions/tasks-management'
+import { updateBoard } from '@/actions/tasks-management'
 
 import {
   Dialog,
@@ -43,7 +43,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { FormError } from '@/components/common/FormError'
 
-export const EditWorkspaceModal = () => {
+export const EditBoardModal = () => {
   const router = useRouter()
 
   const [isPending, startTransition] = useTransition()
@@ -51,14 +51,15 @@ export const EditWorkspaceModal = () => {
 
   const { type, open, onClose, data } = useModal()
 
-  const isOpen = type === 'editWorkspace' && open
+  const isOpen = type === 'editBoard' && open
 
   const form = useForm({
-    resolver: zodResolver(EditWorkspaceSchema),
+    resolver: zodResolver(EditBoardSchema),
     defaultValues: {
       id: '',
       name: '',
       description: '',
+      workspaceId: '',
       status: 'active' as TasksManageStatus,
     },
   })
@@ -66,19 +67,20 @@ export const EditWorkspaceModal = () => {
   const isDirty = form.formState.isDirty
   const loading = isPending || form.formState.isSubmitting
 
-  const handleSubmitForm = (values: z.infer<typeof EditWorkspaceSchema>) => {
+  const handleSubmitForm = (values: z.infer<typeof EditBoardSchema>) => {
     setError('')
 
     startTransition(async () => {
       try {
-        const res = await updateWorkspace(values)
+        const res = await updateBoard(values)
 
         if (res.error) {
           setError(res.error)
+
           return
         }
 
-        toast.success('Workspace updated successfully')
+        toast.success('Board updated successfully')
 
         handleClose()
         router.refresh()
@@ -94,23 +96,24 @@ export const EditWorkspaceModal = () => {
   }
 
   useEffect(() => {
-    if (data?.workspace) {
-      form.setValue('id', data.workspace.id)
-      form.setValue('name', data.workspace.name)
-      form.setValue('description', data.workspace.description)
-      form.setValue('status', data.workspace.status)
+    if (data?.board) {
+      form.setValue('id', data.board.id)
+      form.setValue('workspaceId', data.board.workspaceId)
+      form.setValue('name', data.board.name)
+      form.setValue('description', data.board.description)
+      form.setValue('status', data.board.status)
     }
-  }, [data?.workspace, form])
+  }, [data?.board, form])
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className='p-0 overflow-hidden'>
         <DialogHeader className='pt-8 pb-13 px-6'>
           <DialogTitle className='text-2xl text-center font-bold'>
-            Edit a workspace
+            Edit a board
           </DialogTitle>
           <DialogDescription className='text-center text-zinc-500'>
-            Workspaces are where you store task boards.
+            Board is where you store task cards.
           </DialogDescription>
         </DialogHeader>
 
@@ -120,6 +123,18 @@ export const EditWorkspaceModal = () => {
             className='space-y-8'
           >
             <div className='space-y-2 px-6'>
+              <div className='space-y-2'>
+                <FormLabel className='uppercase text-sm font-bold dark:text-zinc-200'>
+                  Workspace
+                </FormLabel>
+                <Input
+                  type='text'
+                  value={data?.workspace?.name}
+                  disabled
+                  className='border-none dark:bg-stone-900/50'
+                />
+              </div>
+
               <FormField
                 name='name'
                 control={form.control}
@@ -197,6 +212,7 @@ export const EditWorkspaceModal = () => {
                   </FormItem>
                 )}
               />
+
               {error && <FormError message={error} />}
             </div>
 

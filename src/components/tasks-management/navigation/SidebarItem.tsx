@@ -16,15 +16,16 @@ interface SidebarItemProps {
   type: 'workspace' | 'board' | 'task'
   label: string
   href: string
+  active?: boolean
 }
 
 export const SidebarItem = (props: SidebarItemProps) => {
-  const { id, type, label, href } = props
+  const { id, type, label, href, active } = props
 
   const router = useRouter()
 
   const { onOpen } = useModal()
-  const { workspaces } = useTasksManagement()
+  const { workspaces, boards } = useTasksManagement()
 
   const handleClickEdit = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -34,6 +35,12 @@ export const SidebarItem = (props: SidebarItemProps) => {
 
       onOpen('editWorkspace', { workspace })
     }
+
+    if (type === 'board') {
+      const board = boards.find((board) => board.id === id)
+
+      onOpen('editBoard', { board })
+    }
   }
 
   const handleClick = () => {
@@ -42,7 +49,10 @@ export const SidebarItem = (props: SidebarItemProps) => {
 
   return (
     <div
-      className='px-2 py-3 flex items-center cursor-pointer transition-colors duration-300 rounded-md dark:hover:bg-stone-700'
+      className={cn(
+        'px-2 py-3 flex items-center cursor-pointer transition-colors duration-300 rounded-md dark:hover:bg-neutral-700',
+        active && 'dark:bg-neutral-700',
+      )}
       onClick={handleClick}
     >
       <p>{label}</p>

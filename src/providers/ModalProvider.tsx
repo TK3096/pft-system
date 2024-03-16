@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { CreateWorkspaceModal } from '@/components/tasks-management/CreateWorkspaceModal'
 import { EditWorkspaceModal } from '@/components/tasks-management/EditWorkspaceModal'
 import { CreateBoardModal } from '@/components/tasks-management/CreateBoardModal'
+import { EditBoardModal } from '@/components/tasks-management/EditBoardModal'
 
 export const ModalProvider = () => {
   const [mounted, setMounted] = useState(false)
@@ -20,6 +21,7 @@ export const ModalProvider = () => {
       <CreateWorkspaceModal />
       <EditWorkspaceModal />
       <CreateBoardModal />
+      <EditBoardModal />
     </>
   )
 }

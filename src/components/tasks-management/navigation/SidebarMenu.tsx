@@ -29,6 +29,7 @@ export const SideMenu = (props: SideMenuProps) => {
               label={workspace.name}
               href={`/tasks-management/${workspace.id}`}
               type='workspace'
+              active={workspace.id === id}
             />
           </div>
         ))}

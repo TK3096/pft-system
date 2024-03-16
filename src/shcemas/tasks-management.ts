@@ -17,3 +17,11 @@ export const CreateBoardSchema = z.object({
   description: z.string().optional(),
   workspaceId: z.string().min(1, 'Workspace id is required'),
 })
+
+export const EditBoardSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, 'Name is required'),
+  description: z.string().optional(),
+  workspaceId: z.string().min(1, 'Workspace id is required'),
+  status: z.enum(['active', 'inactive']).default('active'),
+})

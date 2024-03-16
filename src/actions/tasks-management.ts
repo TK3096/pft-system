@@ -6,6 +6,7 @@ import {
   CreateWorkspaceSchema,
   EditWorkspaceSchema,
   CreateBoardSchema,
+  EditBoardSchema,
 } from '@/shcemas/tasks-management'
 
 import { createTimestamp } from '@/lib/utils'
@@ -109,4 +110,34 @@ export const createBoard = async (
   }
 
   return { success: id }
+}
+
+export const updateBoard = async (values: z.infer<typeof EditBoardSchema>) => {
+  const validatedFields = EditBoardSchema.safeParse(values)
+
+  if (!validatedFields.success) {
+    return { error: 'Invalid fields' }
+  }
+
+  const { id, name, description, workspaceId, status } = validatedFields.data
+  const user = await getCurrentUser()
+  const timestamp = createTimestamp()
+
+  if (!user) {
+    return { error: 'Unauthorized' }
+  }
+
+  const updated = await update(BOARDS_COLLECTION, id, {
+    name,
+    description,
+    workspaceId,
+    status,
+    updatedAt: timestamp,
+  })
+
+  if (!updated) {
+    return { error: 'Fail to update board' }
+  }
+
+  return { success: true }
 }
