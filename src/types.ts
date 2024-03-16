@@ -1,5 +1,7 @@
 export type RouteType = 'public' | 'private'
 
+export type TasksManageStatus = 'active' | 'inactive'
+
 export interface Workspace {
   id: string
   name: string

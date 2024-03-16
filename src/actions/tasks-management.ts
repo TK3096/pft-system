@@ -2,11 +2,14 @@
 
 import * as z from 'zod'
 
-import { CreateWorkspaceSchema } from '@/shcemas/tasks-management'
+import {
+  CreateWorkspaceSchema,
+  EditWorkspaceSchema,
+} from '@/shcemas/tasks-management'
 
 import { createTimestamp } from '@/lib/utils'
 import { getCurrentUser } from '@/lib/firebase-sdk/auth'
-import { add } from '@/lib/firebase-sdk/db'
+import { add, update } from '@/lib/firebase-sdk/db'
 import { WORKSPACES_COLLECTION } from '@/lib/constant'
 
 export const createWorkspace = async (
@@ -40,4 +43,35 @@ export const createWorkspace = async (
   }
 
   return { success: id }
+}
+
+export const updateWorkspace = async (
+  values: z.infer<typeof EditWorkspaceSchema>,
+) => {
+  const validatedFields = EditWorkspaceSchema.safeParse(values)
+
+  if (!validatedFields.success) {
+    return { error: 'Invalid fields' }
+  }
+
+  const { id, name, description, status } = validatedFields.data
+  const user = await getCurrentUser()
+  const timestamp = createTimestamp()
+
+  if (!user) {
+    return { error: 'Unauthorized' }
+  }
+
+  const updated = await update(WORKSPACES_COLLECTION, id, {
+    name,
+    description,
+    status,
+    updatedAt: timestamp,
+  })
+
+  if (!updated) {
+    return { error: 'Fail to update workspace' }
+  }
+
+  return { success: true }
 }

@@ -16,5 +16,5 @@ export const getDocuments = (
     snapshot.forEach(cb)
   })
 
-  return { unsubscribe }
+  return unsubscribe
 }

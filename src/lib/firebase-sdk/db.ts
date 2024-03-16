@@ -13,3 +13,17 @@ export const add = async (collection: string, data: DocumentData) => {
     return null
   }
 }
+
+export const update = async (
+  collection: string,
+  id: string,
+  data: DocumentData,
+) => {
+  try {
+    await db.collection(collection).doc(id).update(data)
+
+    return true
+  } catch (error) {
+    return null
+  }
+}

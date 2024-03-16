@@ -1,17 +1,19 @@
 'use client'
 
+import { TasksManageStatus } from '@/types'
+
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useEffect } from 'react'
 import { toast } from 'sonner'
 
 import { useModal } from '@/hooks/useModal'
 
-import { CreateWorkspaceSchema } from '@/shcemas/tasks-management'
+import { EditWorkspaceSchema } from '@/shcemas/tasks-management'
 
-import { createWorkspace } from '@/actions/tasks-management'
+import { updateWorkspace } from '@/actions/tasks-management'
 
 import {
   Dialog,
@@ -29,50 +31,59 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { FormError } from '@/components/common/FormError'
 
-export const CreateWorkspaceModal = () => {
+export const EditWorkspaceModal = () => {
   const router = useRouter()
 
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
 
-  const { type, open, onClose } = useModal()
+  const { type, open, onClose, data } = useModal()
 
-  const isOpen = type === 'createWorkspace' && open
+  const isOpen = type === 'editWorkspace' && open
 
   const form = useForm({
-    resolver: zodResolver(CreateWorkspaceSchema),
+    resolver: zodResolver(EditWorkspaceSchema),
     defaultValues: {
+      id: '',
       name: '',
       description: '',
+      status: 'active' as TasksManageStatus,
     },
   })
 
   const isDirty = form.formState.isDirty
   const loading = isPending || form.formState.isSubmitting
 
-  const handleSubmitForm = (values: z.infer<typeof CreateWorkspaceSchema>) => {
+  const handleSubmitForm = (values: z.infer<typeof EditWorkspaceSchema>) => {
     setError('')
 
     startTransition(async () => {
       try {
-        const res = await createWorkspace(values)
+        const res = await updateWorkspace(values)
 
         if (res.error) {
           setError(res.error)
           return
         }
 
-        toast.success('Workspace created successfully')
+        toast.success('Workspace updated successfully')
 
         handleClose()
         router.refresh()
       } catch {
-        setError('Fail to create workspace')
+        setError('Fail to update workspace')
       }
     })
   }
@@ -82,12 +93,21 @@ export const CreateWorkspaceModal = () => {
     onClose()
   }
 
+  useEffect(() => {
+    if (data?.workspace) {
+      form.setValue('id', data.workspace.id)
+      form.setValue('name', data.workspace.name)
+      form.setValue('description', data.workspace.description)
+      form.setValue('status', data.workspace.status)
+    }
+  }, [data?.workspace, form])
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className='p-0 overflow-hidden'>
         <DialogHeader className='pt-8 pb-13 px-6'>
           <DialogTitle className='text-2xl text-center font-bold'>
-            Create a new workspace
+            Edit workspace
           </DialogTitle>
           <DialogDescription className='text-center text-zinc-500'>
             Workspaces are where you store task boards.
@@ -151,6 +171,32 @@ export const CreateWorkspaceModal = () => {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                name='status'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='uppercase text-sm font-bold dark:text-zinc-200'>
+                      Status
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className='border-none dark:bg-stone-900/50'>
+                          <SelectValue placeholder='Select status' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value='active'>Active</SelectItem>
+                        <SelectItem value='inactive'>Inactive</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
               {error && <FormError message={error} />}
             </div>
 
@@ -168,7 +214,7 @@ export const CreateWorkspaceModal = () => {
                 variant='primary'
                 disabled={!isDirty || loading}
               >
-                Create
+                Save
               </Button>
             </DialogFooter>
           </form>
