@@ -11,3 +11,14 @@ export interface Workspace {
   createdAt: number
   updatedAt: number
 }
+
+export interface Board {
+  id: string
+  name: string
+  description: string
+  workspaceId: string
+  status: 'active' | 'inactive'
+  owner: string
+  createdAt: number
+  updatedAt: number
+}

@@ -2,7 +2,7 @@ import { Workspace } from '@/types'
 
 import { create } from 'zustand'
 
-export type ModalType = 'createWorkspace' | 'editWorkspace'
+export type ModalType = 'createWorkspace' | 'editWorkspace' | 'createBoard'
 
 interface ModalData {
   workspace?: Workspace

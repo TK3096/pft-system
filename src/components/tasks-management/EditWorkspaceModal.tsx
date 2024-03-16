@@ -83,7 +83,7 @@ export const EditWorkspaceModal = () => {
         handleClose()
         router.refresh()
       } catch {
-        setError('Fail to update workspace')
+        setError('Something went wrong')
       }
     })
   }

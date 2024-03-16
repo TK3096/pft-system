@@ -4,14 +4,14 @@ import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useEffect } from 'react'
 import { toast } from 'sonner'
 
 import { useModal } from '@/hooks/useModal'
 
-import { CreateWorkspaceSchema } from '@/shcemas/tasks-management'
+import { CreateBoardSchema } from '@/shcemas/tasks-management'
 
-import { createWorkspace } from '@/actions/tasks-management'
+import { createBoard } from '@/actions/tasks-management'
 
 import {
   Dialog,
@@ -34,40 +34,42 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { FormError } from '@/components/common/FormError'
 
-export const CreateWorkspaceModal = () => {
+export const CreateBoardModal = () => {
   const router = useRouter()
 
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
 
-  const { type, open, onClose } = useModal()
+  const { type, open, onClose, data } = useModal()
 
-  const isOpen = type === 'createWorkspace' && open
+  const isOpen = type === 'createBoard' && open
 
   const form = useForm({
-    resolver: zodResolver(CreateWorkspaceSchema),
+    resolver: zodResolver(CreateBoardSchema),
     defaultValues: {
       name: '',
       description: '',
+      workspaceId: '',
     },
   })
 
   const isDirty = form.formState.isDirty
   const loading = isPending || form.formState.isSubmitting
 
-  const handleSubmitForm = (values: z.infer<typeof CreateWorkspaceSchema>) => {
+  const handleSubmitForm = (values: z.infer<typeof CreateBoardSchema>) => {
     setError('')
 
     startTransition(async () => {
       try {
-        const res = await createWorkspace(values)
+        const res = await createBoard(values)
 
         if (res.error) {
           setError(res.error)
+
           return
         }
 
-        toast.success('Workspace created successfully')
+        toast.success('Board created successfully')
 
         handleClose()
         router.refresh()
@@ -82,15 +84,21 @@ export const CreateWorkspaceModal = () => {
     onClose()
   }
 
+  useEffect(() => {
+    if (data?.workspace) {
+      form.setValue('workspaceId', data.workspace.id)
+    }
+  }, [data?.workspace, form])
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className='p-0 overflow-hidden'>
         <DialogHeader className='pt-8 pb-13 px-6'>
           <DialogTitle className='text-2xl text-center font-bold'>
-            Create a new workspace
+            Create a new board
           </DialogTitle>
           <DialogDescription className='text-center text-zinc-500'>
-            Workspaces are where you store task boards.
+            Board is where you store task cards.
           </DialogDescription>
         </DialogHeader>
 
@@ -100,6 +108,18 @@ export const CreateWorkspaceModal = () => {
             className='space-y-8'
           >
             <div className='space-y-2 px-6'>
+              <div className='space-y-2'>
+                <FormLabel className='uppercase text-sm font-bold dark:text-zinc-200'>
+                  Workspace
+                </FormLabel>
+                <Input
+                  type='text'
+                  value={data?.workspace?.name}
+                  disabled
+                  className='border-none dark:bg-stone-900/50'
+                />
+              </div>
+
               <FormField
                 name='name'
                 control={form.control}

@@ -5,12 +5,13 @@ import * as z from 'zod'
 import {
   CreateWorkspaceSchema,
   EditWorkspaceSchema,
+  CreateBoardSchema,
 } from '@/shcemas/tasks-management'
 
 import { createTimestamp } from '@/lib/utils'
 import { getCurrentUser } from '@/lib/firebase-sdk/auth'
 import { add, update } from '@/lib/firebase-sdk/db'
-import { WORKSPACES_COLLECTION } from '@/lib/constant'
+import { BOARDS_COLLECTION, WORKSPACES_COLLECTION } from '@/lib/constant'
 
 export const createWorkspace = async (
   values: z.infer<typeof CreateWorkspaceSchema>,
@@ -74,4 +75,38 @@ export const updateWorkspace = async (
   }
 
   return { success: true }
+}
+
+export const createBoard = async (
+  values: z.infer<typeof CreateBoardSchema>,
+) => {
+  const validatedFields = CreateBoardSchema.safeParse(values)
+
+  if (!validatedFields.success) {
+    return { error: 'Invalid fields' }
+  }
+
+  const { name, description, workspaceId } = validatedFields.data
+  const user = await getCurrentUser()
+  const timestamp = createTimestamp()
+
+  if (!user) {
+    return { error: 'Unauthorized' }
+  }
+
+  const id = await add(BOARDS_COLLECTION, {
+    name,
+    description,
+    workspaceId,
+    status: 'active',
+    owner: user.uid,
+    createdAt: timestamp,
+    updatedAt: timestamp,
+  })
+
+  if (!id) {
+    return { error: 'Fail to create board' }
+  }
+
+  return { success: id }
 }
