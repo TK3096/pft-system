@@ -1,8 +1,11 @@
+import { LandingBox } from '@/components/tasks-management/LandingBox'
+
 const TasksManagementPage = () => {
   return (
-    <div>
-      <div>task management page</div>
-    </div>
+    <LandingBox
+      title='Tasks Management'
+      description='Create or select your workspace to start managing your tasks'
+    />
   )
 }
 

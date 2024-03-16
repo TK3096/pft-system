@@ -7,7 +7,12 @@ import { useEffect, useState, useMemo } from 'react'
 import { getDocuments } from '@/lib/firebase/db'
 import { BOARDS_COLLECTION, WORKSPACES_COLLECTION } from '@/lib/constant'
 
-export const useTasksManagement = (id?: string) => {
+interface UseTasksManagement {
+  workspaceId: string
+  boardId: string
+}
+
+export const useTasksManagement = (value?: UseTasksManagement) => {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([])
   const [boards, setBoards] = useState<Board[]>([])
 
@@ -18,14 +23,14 @@ export const useTasksManagement = (id?: string) => {
 
   const sortedAndFilterBoards = useMemo(() => {
     const filter = boards.filter((b) => {
-      if (id) {
-        return b.workspaceId === id && b.status === 'active'
+      if (value?.workspaceId) {
+        return b.workspaceId === value.workspaceId && b.status === 'active'
       }
 
       return b.status === 'active'
     })
     return filter.sort((a, b) => a.createdAt - b.createdAt)
-  }, [boards, id])
+  }, [boards, value])
 
   useEffect(() => {
     const unsubscribe = getDocuments(WORKSPACES_COLLECTION, (doc) => {

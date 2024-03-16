@@ -1,15 +1,7 @@
-'use client'
-
-import { useParams } from 'next/navigation'
+import { LandingBox } from '@/components/tasks-management/LandingBox'
 
 const WorkspaceIdPage = () => {
-  const params = useParams()
-
-  return (
-    <div>
-      <div>workspace {params.workspaceId}</div>
-    </div>
-  )
+  return <LandingBox title='Board' description='Create or select your board' />
 }
 
 export default WorkspaceIdPage

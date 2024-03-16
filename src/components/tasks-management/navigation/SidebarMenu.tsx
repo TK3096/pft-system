@@ -15,9 +15,10 @@ export const SideMenu = (props: SideMenuProps) => {
 
   const params = useParams()
 
-  const id = params.workspaceId ? (params.workspaceId as string) : undefined
+  const workspaceId = params.workspaceId as string
+  const boardId = params.boardId as string
 
-  const { workspaces, boards } = useTasksManagement(id)
+  const { workspaces, boards } = useTasksManagement({ workspaceId, boardId })
 
   return (
     <div className='h-full flex flex-col flex-1 gap-y-1'>
@@ -29,7 +30,7 @@ export const SideMenu = (props: SideMenuProps) => {
               label={workspace.name}
               href={`/tasks-management/${workspace.id}`}
               type='workspace'
-              active={workspace.id === id}
+              active={workspace.id === workspaceId}
             />
           </div>
         ))}
@@ -42,6 +43,7 @@ export const SideMenu = (props: SideMenuProps) => {
               label={board.name}
               href={`/tasks-management/${board.workspaceId}/${board.id}`}
               type='board'
+              active={board.id === boardId}
             />
           </div>
         ))}
