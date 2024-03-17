@@ -103,7 +103,7 @@ export const EditBoardModal = () => {
       form.setValue('description', data.board.description)
       form.setValue('status', data.board.status)
     }
-  }, [data?.board, form])
+  }, [data, form])
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>

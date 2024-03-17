@@ -55,7 +55,9 @@ export const SidebarItem = (props: SidebarItemProps) => {
       )}
       onClick={handleClick}
     >
-      <p>{label}</p>
+      <p className='text-nowrap w-[100px] overflow-scroll no-scrollbar'>
+        {label}
+      </p>
       <div className='ml-auto'>
         <ActionTooltip label='edit' side='top' align='center'>
           <Edit className='w-4 h-4' onClick={handleClickEdit} />

@@ -128,7 +128,7 @@ export const CreateTaskModal = () => {
     if (data?.board) {
       form.setValue('boardId', data.board.id)
     }
-  }, [form, data?.board])
+  }, [form, data])
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>

@@ -88,7 +88,7 @@ export const CreateBoardModal = () => {
     if (data?.workspace) {
       form.setValue('workspaceId', data.workspace.id)
     }
-  }, [data?.workspace, form])
+  }, [data, form])
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>

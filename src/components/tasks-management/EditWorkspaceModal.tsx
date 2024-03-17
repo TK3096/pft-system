@@ -100,7 +100,7 @@ export const EditWorkspaceModal = () => {
       form.setValue('description', data.workspace.description)
       form.setValue('status', data.workspace.status)
     }
-  }, [data?.workspace, form])
+  }, [data, form])
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
