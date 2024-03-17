@@ -1,6 +1,6 @@
 'use client'
 
-import { TasksManageStatus } from '@/types'
+import { TaskState } from '@/types'
 
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
@@ -9,20 +9,14 @@ import { useRouter } from 'next/navigation'
 import { useState, useTransition, useEffect } from 'react'
 import { toast } from 'sonner'
 
+import { X } from 'lucide-react'
+
 import { useModal } from '@/hooks/useModal'
 
-import { EditWorkspaceSchema } from '@/schemas/tasks-management'
+import { createTask } from '@/actions/tasks-management'
 
-import { updateWorkspace } from '@/actions/tasks-management'
+import { CreateTaskSchema } from '@/schemas/tasks-management'
 
-import {
-  Dialog,
-  DialogHeader,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -32,53 +26,89 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
 import { FormError } from '@/components/common/FormError'
+import { ActionTooltip } from '@/components/common/ActionTooltip'
 
-export const EditWorkspaceModal = () => {
+import { TASK_STATES } from '@/lib/constant'
+
+export const CreateTaskModal = () => {
   const router = useRouter()
 
-  const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
+  const [remarkFields, setRemarkFields] = useState<string[]>([''])
+  const [isPending, startTransition] = useTransition()
 
-  const { type, open, onClose, data } = useModal()
+  const { open, onClose, type, data } = useModal()
 
-  const isOpen = type === 'editWorkspace' && open
+  const isOpen = open && type === 'createTask'
 
   const form = useForm({
-    resolver: zodResolver(EditWorkspaceSchema),
+    resolver: zodResolver(CreateTaskSchema),
     defaultValues: {
-      id: '',
       name: '',
       description: '',
-      status: 'active' as TasksManageStatus,
+      boardId: '',
+      state: TaskState.TODO,
+      remarks: [] as string[],
     },
   })
 
-  const isDirty = form.formState.isDirty
   const loading = isPending || form.formState.isSubmitting
+  const isDirty = form.formState.isDirty
 
-  const handleSubmitForm = (values: z.infer<typeof EditWorkspaceSchema>) => {
+  const handleRemarkFieldChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    const newRemarkFields = [...remarkFields]
+    newRemarkFields[index] = e.target.value
+
+    if (index === newRemarkFields.length - 1) {
+      newRemarkFields.push('')
+    }
+
+    setRemarkFields(newRemarkFields)
+    form.setValue('remarks', newRemarkFields)
+  }
+
+  const handleRemoveRemarkField = (index: number) => {
+    const newRemarkFields = [...remarkFields]
+    const filter = newRemarkFields.filter((_, i) => i !== index)
+
+    setRemarkFields(filter)
+    form.setValue('remarks', filter)
+  }
+
+  const handleSubmitForm = (values: z.infer<typeof CreateTaskSchema>) => {
     setError('')
 
     startTransition(async () => {
       try {
-        const res = await updateWorkspace(values)
+        const res = await createTask(values)
 
         if (res.error) {
           setError(res.error)
           return
         }
 
-        toast.success('Workspace updated successfully')
+        toast.success('Task created successfully')
 
         handleClose()
         router.refresh()
@@ -89,28 +119,26 @@ export const EditWorkspaceModal = () => {
   }
 
   const handleClose = () => {
+    setRemarkFields([''])
     form.reset()
     onClose()
   }
 
   useEffect(() => {
-    if (data?.workspace) {
-      form.setValue('id', data.workspace.id)
-      form.setValue('name', data.workspace.name)
-      form.setValue('description', data.workspace.description)
-      form.setValue('status', data.workspace.status)
+    if (data?.board) {
+      form.setValue('boardId', data.board.id)
     }
-  }, [data?.workspace, form])
+  }, [form, data?.board])
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className='p-0 overflow-hidden'>
         <DialogHeader className='pt-8 pb-13 px-6'>
           <DialogTitle className='text-2xl text-center font-bold'>
-            Edit a workspace
+            Create a new Task
           </DialogTitle>
           <DialogDescription className='text-center text-zinc-500'>
-            Workspaces are where you store task boards.
+            Create a new task for the board
           </DialogDescription>
         </DialogHeader>
 
@@ -120,6 +148,18 @@ export const EditWorkspaceModal = () => {
             className='space-y-8'
           >
             <div className='space-y-2 px-6'>
+              <div className='space-y-2'>
+                <FormLabel className='uppercase text-sm font-bold dark:text-zinc-200'>
+                  Board
+                </FormLabel>
+                <Input
+                  type='text'
+                  value={data?.board?.name}
+                  disabled
+                  className='border-none dark:bg-stone-900/50'
+                />
+              </div>
+
               <FormField
                 name='name'
                 control={form.control}
@@ -135,7 +175,7 @@ export const EditWorkspaceModal = () => {
                       <Input
                         id='name'
                         type='text'
-                        placeholder='Workspace name'
+                        placeholder='Task name'
                         className='border-none dark:bg-stone-900/50'
                         disabled={loading}
                         {...field}
@@ -161,7 +201,7 @@ export const EditWorkspaceModal = () => {
                       <Textarea
                         id='description'
                         rows={3}
-                        placeholder='Workspace description'
+                        placeholder='Task description'
                         className='border-none dark:bg-stone-900/50'
                         disabled={loading}
                         {...field}
@@ -173,12 +213,12 @@ export const EditWorkspaceModal = () => {
               />
 
               <FormField
-                name='status'
+                name='state'
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='uppercase text-sm font-bold dark:text-zinc-200'>
-                      Status
+                      State
                     </FormLabel>
                     <Select
                       onValueChange={field.onChange}
@@ -186,17 +226,61 @@ export const EditWorkspaceModal = () => {
                     >
                       <FormControl>
                         <SelectTrigger className='border-none dark:bg-stone-900/50'>
-                          <SelectValue placeholder='Select status' />
+                          <SelectValue placeholder='Select state' />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value='active'>Active</SelectItem>
-                        <SelectItem value='inactive'>Inactive</SelectItem>
+                        {TASK_STATES.map((state) => (
+                          <SelectItem key={state} value={state}>
+                            {state.toUpperCase()}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </FormItem>
                 )}
               />
+
+              <FormItem>
+                <FormLabel className='uppercase text-sm font-bold dark:text-zinc-200'>
+                  Remarks
+                </FormLabel>
+                <div className='h-[200px] w-full space-y-2 overflow-scroll'>
+                  {remarkFields.map((remark, index) => (
+                    <div
+                      key={`remark-${index}`}
+                      className='py-1 grid grid-cols-[90%,5%] gap-1'
+                    >
+                      <Input
+                        disabled={loading}
+                        value={remark}
+                        onChange={(e) => handleRemarkFieldChange(e, index)}
+                        placeholder='Task remark'
+                        className='border-none dark:bg-stone-900/50'
+                      />
+                      {remarkFields.length > 1 &&
+                        index !== remarkFields.length - 1 && (
+                          <ActionTooltip
+                            label='delete'
+                            side='left'
+                            align='center'
+                          >
+                            <Button
+                              type='button'
+                              variant='outline'
+                              size='icon'
+                              className='border-none'
+                              onClick={() => handleRemoveRemarkField(index)}
+                            >
+                              <X className='w-4 h-4' />
+                            </Button>
+                          </ActionTooltip>
+                        )}
+                    </div>
+                  ))}
+                </div>
+              </FormItem>
+
               {error && <FormError message={error} />}
             </div>
 
@@ -214,7 +298,7 @@ export const EditWorkspaceModal = () => {
                 variant='primary'
                 disabled={!isDirty || loading}
               >
-                Save
+                Create
               </Button>
             </DialogFooter>
           </form>

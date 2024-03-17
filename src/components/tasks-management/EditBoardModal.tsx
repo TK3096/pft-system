@@ -11,7 +11,7 @@ import { toast } from 'sonner'
 
 import { useModal } from '@/hooks/useModal'
 
-import { EditBoardSchema } from '@/shcemas/tasks-management'
+import { EditBoardSchema } from '@/schemas/tasks-management'
 
 import { updateBoard } from '@/actions/tasks-management'
 

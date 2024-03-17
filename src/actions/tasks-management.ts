@@ -7,12 +7,17 @@ import {
   EditWorkspaceSchema,
   CreateBoardSchema,
   EditBoardSchema,
-} from '@/shcemas/tasks-management'
+  CreateTaskSchema,
+} from '@/schemas/tasks-management'
 
 import { createTimestamp } from '@/lib/utils'
 import { getCurrentUser } from '@/lib/firebase-sdk/auth'
 import { add, update } from '@/lib/firebase-sdk/db'
-import { BOARDS_COLLECTION, WORKSPACES_COLLECTION } from '@/lib/constant'
+import {
+  BOARDS_COLLECTION,
+  WORKSPACES_COLLECTION,
+  TASKS_COLLECTION,
+} from '@/lib/constant'
 
 export const createWorkspace = async (
   values: z.infer<typeof CreateWorkspaceSchema>,
@@ -140,4 +145,37 @@ export const updateBoard = async (values: z.infer<typeof EditBoardSchema>) => {
   }
 
   return { success: true }
+}
+
+export const createTask = async (values: z.infer<typeof CreateTaskSchema>) => {
+  const validatedFields = CreateTaskSchema.safeParse(values)
+
+  if (!validatedFields.success) {
+    return { error: 'Invalid fields' }
+  }
+
+  const { name, description, boardId, state, remarks } = validatedFields.data
+  const user = await getCurrentUser()
+  const timestamp = createTimestamp()
+
+  if (!user) {
+    return { error: 'Unauthorized' }
+  }
+
+  const id = await add(TASKS_COLLECTION, {
+    name,
+    description,
+    boardId,
+    state,
+    remarks: remarks?.filter((remark) => remark.length > 0) ?? [],
+    owner: user.uid,
+    createdAt: timestamp,
+    updatedAt: timestamp,
+  })
+
+  if (!id) {
+    return { error: 'Fail to create task' }
+  }
+
+  return { success: id }
 }

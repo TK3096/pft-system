@@ -3,7 +3,7 @@ import { Sidebar } from '@/components/tasks-management/navigation/Sidebar'
 import { get } from '@/lib/firebase-sdk/db'
 import { WORKSPACES_COLLECTION } from '@/lib/constant'
 
-const WorkspaceIdPageLayout = async ({
+const WorkspaceIdLayout = async ({
   children,
   params,
 }: {
@@ -35,4 +35,4 @@ const WorkspaceIdPageLayout = async ({
   )
 }
 
-export default WorkspaceIdPageLayout
+export default WorkspaceIdLayout

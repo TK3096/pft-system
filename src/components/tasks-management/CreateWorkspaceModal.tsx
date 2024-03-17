@@ -9,7 +9,7 @@ import { toast } from 'sonner'
 
 import { useModal } from '@/hooks/useModal'
 
-import { CreateWorkspaceSchema } from '@/shcemas/tasks-management'
+import { CreateWorkspaceSchema } from '@/schemas/tasks-management'
 
 import { createWorkspace } from '@/actions/tasks-management'
 

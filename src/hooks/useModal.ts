@@ -7,6 +7,7 @@ export type ModalType =
   | 'editWorkspace'
   | 'createBoard'
   | 'editBoard'
+  | 'createTask'
 
 interface ModalData {
   workspace?: Workspace

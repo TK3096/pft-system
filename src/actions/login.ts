@@ -3,7 +3,7 @@
 import * as z from 'zod'
 import { cookies } from 'next/headers'
 
-import { LoginSchema } from '@/shcemas/auth'
+import { LoginSchema } from '@/schemas/auth'
 
 import { login as loginWithFirebase } from '@/lib/firebase/auth'
 import { createSessionCookie } from '@/lib/firebase-sdk/auth'

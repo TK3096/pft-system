@@ -9,7 +9,7 @@ import { toast } from 'sonner'
 
 import { useModal } from '@/hooks/useModal'
 
-import { CreateBoardSchema } from '@/shcemas/tasks-management'
+import { CreateBoardSchema } from '@/schemas/tasks-management'
 
 import { createBoard } from '@/actions/tasks-management'
 

@@ -1,7 +1,11 @@
 import { LandingBox } from '@/components/tasks-management/LandingBox'
 
 const BoardIdPage = () => {
-  return <LandingBox title='Task' description='Create your tasks' />
+  return (
+    <div className='px-6'>
+      <div>hello</div>
+    </div>
+  )
 }
 
 export default BoardIdPage

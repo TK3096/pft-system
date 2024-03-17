@@ -18,7 +18,7 @@ export const SideMenu = (props: SideMenuProps) => {
   const workspaceId = params.workspaceId as string
   const boardId = params.boardId as string
 
-  const { workspaces, boards } = useTasksManagement({ workspaceId, boardId })
+  const { workspaces, boards } = useTasksManagement({ workspaceId })
 
   return (
     <div className='h-full flex flex-col flex-1 gap-y-1'>

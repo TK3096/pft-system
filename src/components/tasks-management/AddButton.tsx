@@ -16,7 +16,7 @@ export const AddButton = (props: AddButtonProps) => {
   const { label, type } = props
 
   const params = useParams()
-  const { workspaces } = useTasksManagement()
+  const { workspaces, boards } = useTasksManagement()
 
   const { onOpen } = useModal()
 
@@ -30,6 +30,12 @@ export const AddButton = (props: AddButtonProps) => {
         const workspace = workspaces.find((w) => w.id === params.workspaceId)
 
         onOpen('createBoard', { workspace })
+        break
+      }
+      case 'task': {
+        const board = boards.find((b) => b.id === params.boardId)
+
+        onOpen('createTask', { board })
         break
       }
       default: {

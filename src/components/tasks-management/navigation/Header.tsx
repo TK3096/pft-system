@@ -10,7 +10,7 @@ export const Header = (props: HeaderProps) => {
 
   return (
     <Link href={href}>
-      <div className='px-3 py-3 text-center text-nowrap'>
+      <div className='px-3 py-3 text-center text-nowrap font-semibold'>
         <h3 className='capitalize text-md'>{label}</h3>
       </div>
     </Link>

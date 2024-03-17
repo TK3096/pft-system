@@ -22,3 +22,10 @@ export interface Board {
   createdAt: number
   updatedAt: number
 }
+
+export enum TaskState {
+  TODO = 'todo',
+  IN_PROGRESS = 'in-progress',
+  REVIEW = 'review',
+  DONE = 'done',
+}

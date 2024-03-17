@@ -23,7 +23,7 @@ import { FormError } from '@/components/common/FormError'
 
 import { login } from '@/actions/login'
 
-import { LoginSchema } from '@/shcemas/auth'
+import { LoginSchema } from '@/schemas/auth'
 
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes'
 
