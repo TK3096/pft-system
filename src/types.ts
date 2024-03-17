@@ -23,6 +23,19 @@ export interface Board {
   updatedAt: number
 }
 
+export interface Task {
+  id: string
+  name: string
+  description: string
+  boardId: string
+  status: 'active' | 'inactive'
+  state: TaskState
+  owner: string
+  remarks: string[]
+  createdAt: number
+  updatedAt: number
+}
+
 export enum TaskState {
   TODO = 'todo',
   IN_PROGRESS = 'in-progress',

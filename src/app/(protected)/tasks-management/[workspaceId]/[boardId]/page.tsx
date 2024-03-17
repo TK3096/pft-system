@@ -1,11 +1,7 @@
-import { LandingBox } from '@/components/tasks-management/LandingBox'
+import { KanbanBoard } from '@/components/tasks-management/KanbanBoard'
 
 const BoardIdPage = () => {
-  return (
-    <div className='px-6'>
-      <div>hello</div>
-    </div>
-  )
+  return <KanbanBoard />
 }
 
 export default BoardIdPage

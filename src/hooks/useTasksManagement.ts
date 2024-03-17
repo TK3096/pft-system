@@ -1,11 +1,15 @@
 'use client'
 
-import { Board, Workspace } from '@/types'
+import { Board, Workspace, Task } from '@/types'
 
 import { useEffect, useState, useMemo } from 'react'
 
 import { getDocuments } from '@/lib/firebase/db'
-import { BOARDS_COLLECTION, WORKSPACES_COLLECTION } from '@/lib/constant'
+import {
+  BOARDS_COLLECTION,
+  TASKS_COLLECTION,
+  WORKSPACES_COLLECTION,
+} from '@/lib/constant'
 
 interface UseTasksManagement {
   workspaceId?: string
@@ -15,6 +19,7 @@ interface UseTasksManagement {
 export const useTasksManagement = (value?: UseTasksManagement) => {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([])
   const [boards, setBoards] = useState<Board[]>([])
+  const [tasks, setTasks] = useState<Task[]>([])
 
   const sortedAndFilterWorkspaces = useMemo(() => {
     const filter = workspaces.filter((w) => w.status === 'active')
@@ -35,6 +40,17 @@ export const useTasksManagement = (value?: UseTasksManagement) => {
     })
     return filter.sort((a, b) => a.createdAt - b.createdAt)
   }, [boards, value])
+
+  const sortedAndFilterTasks = useMemo(() => {
+    const filter = tasks.filter((t) => {
+      if (value?.boardId) {
+        return t.boardId === value.boardId && t.status === 'active'
+      }
+
+      return t.status === 'active'
+    })
+    return filter.sort((a, b) => a.createdAt - b.createdAt)
+  }, [tasks, value])
 
   useEffect(() => {
     const unsubscribe = getDocuments(WORKSPACES_COLLECTION, (doc) => {
@@ -112,8 +128,55 @@ export const useTasksManagement = (value?: UseTasksManagement) => {
     }
   }, [])
 
+  useEffect(() => {
+    const unsubscribe = getDocuments(TASKS_COLLECTION, (doc) => {
+      const {
+        name,
+        description,
+        status,
+        state,
+        boardId,
+        owner,
+        remarks,
+        createdAt,
+        updatedAt,
+      } = doc.data()
+
+      setTasks((prev) => {
+        const index = prev.findIndex((b) => b.id === doc.id)
+
+        const newData: Task = {
+          id: doc.id,
+          name,
+          description,
+          status,
+          state,
+          boardId,
+          remarks,
+          owner,
+          createdAt,
+          updatedAt,
+        }
+
+        if (index !== -1) {
+          const temp = [...prev]
+          temp[index] = newData
+
+          return temp
+        }
+
+        return [...prev, newData]
+      })
+    })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [])
+
   return {
     workspaces: sortedAndFilterWorkspaces,
     boards: sortedAndFilterBoards,
+    tasks: sortedAndFilterTasks,
   }
 }

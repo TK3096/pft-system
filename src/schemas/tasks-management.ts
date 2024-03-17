@@ -42,3 +42,20 @@ export const CreateTaskSchema = z.object({
     .default(TaskState.TODO),
   remarks: z.array(z.string()).optional(),
 })
+
+export const EditTaskSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, 'Name is required'),
+  description: z.string().min(1, 'Description is required'),
+  boardId: z.string().min(1, 'Board id is required'),
+  state: z
+    .enum([
+      TaskState.TODO,
+      TaskState.IN_PROGRESS,
+      TaskState.REVIEW,
+      TaskState.DONE,
+    ])
+    .default(TaskState.TODO),
+  status: z.enum(['active', 'inactive']).default('active'),
+  remarks: z.array(z.string()).optional(),
+})

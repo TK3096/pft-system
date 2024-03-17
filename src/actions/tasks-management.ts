@@ -8,6 +8,7 @@ import {
   CreateBoardSchema,
   EditBoardSchema,
   CreateTaskSchema,
+  EditTaskSchema,
 } from '@/schemas/tasks-management'
 
 import { createTimestamp } from '@/lib/utils'
@@ -166,6 +167,7 @@ export const createTask = async (values: z.infer<typeof CreateTaskSchema>) => {
     name,
     description,
     boardId,
+    status: 'active',
     state,
     remarks: remarks?.filter((remark) => remark.length > 0) ?? [],
     owner: user.uid,
@@ -178,4 +180,37 @@ export const createTask = async (values: z.infer<typeof CreateTaskSchema>) => {
   }
 
   return { success: id }
+}
+
+export const updateTask = async (values: z.infer<typeof EditTaskSchema>) => {
+  const validatedFields = EditTaskSchema.safeParse(values)
+
+  if (!validatedFields.success) {
+    return { error: 'Invalid fields' }
+  }
+
+  const { id, name, description, state, status, boardId, remarks } =
+    validatedFields.data
+  const user = await getCurrentUser()
+  const timestamp = createTimestamp()
+
+  if (!user) {
+    return { error: 'Unauthorized' }
+  }
+
+  const updated = await update(TASKS_COLLECTION, id, {
+    name,
+    description,
+    boardId,
+    state,
+    status,
+    remarks: remarks?.filter((remark) => remark.length > 0) ?? [],
+    updatedAt: timestamp,
+  })
+
+  if (!updated) {
+    return { error: 'Fail to update task' }
+  }
+
+  return { success: true }
 }
