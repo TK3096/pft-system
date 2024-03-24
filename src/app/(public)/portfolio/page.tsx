@@ -1,9 +1,7 @@
+import { ProjectList } from '@/components/portfolio/ProjectList'
+
 const PortfolioPage = () => {
-  return (
-    <div>
-      <div>Portfolio Page</div>
-    </div>
-  )
+  return <ProjectList />
 }
 
 export default PortfolioPage

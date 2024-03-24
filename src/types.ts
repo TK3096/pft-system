@@ -42,3 +42,18 @@ export enum TaskState {
   REVIEW = 'review',
   DONE = 'done',
 }
+
+export enum PortfolioRank {
+  COMMON = 'common',
+  RARE = 'rare',
+  EPIC = 'epic',
+}
+
+export interface Portfolio {
+  id: string
+  name: string
+  readmeUrl: string
+  rank: PortfolioRank
+  src: string
+  demo?: string
+}

@@ -95,3 +95,56 @@ body,
     scrollbar-width: none; /* Firefox */
   }
 }
+
+.project-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.25rem;
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  z-index: -1;
+}
+
+.project-card-epic {
+  filter: drop-shadow(0px 2px 20px rgb(181 81 48 / 0.5));
+}
+
+.project-card-epic.project-card::before {
+  background-color: tomato;
+  transition: 0.3s;
+  animation: epic-animate 2s linear infinite;
+}
+
+.project-card-rare.project-card::before {
+  background: linear-gradient(251deg, #489fd0, #0c1a8c);
+  background-size: 400% 400%;
+  animation: rare-animate 5s ease infinite;
+}
+
+@keyframes epic-animate {
+  50% {
+    filter: hue-rotate(350deg);
+  }
+}
+
+@keyframes rare-animate {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
