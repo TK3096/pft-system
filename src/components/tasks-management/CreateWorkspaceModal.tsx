@@ -67,10 +67,12 @@ export const CreateWorkspaceModal = () => {
           return
         }
 
+        const id = res.success
+
         toast.success('Workspace created successfully')
 
         handleClose()
-        router.refresh()
+        router.push(`/tasks-management/${id}`)
       } catch {
         setError('Something went wrong')
       }
