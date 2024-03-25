@@ -69,10 +69,13 @@ export const CreateBoardModal = () => {
           return
         }
 
+        const workspaceId = values.workspaceId
+        const id = res.success
+
         toast.success('Board created successfully')
 
         handleClose()
-        router.refresh()
+        router.push(`/tasks-management/${workspaceId}/${id}`)
       } catch {
         setError('Something went wrong')
       }
