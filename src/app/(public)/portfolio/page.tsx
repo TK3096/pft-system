@@ -1,9 +1,9 @@
+import { PortfolioList } from '@/components/portfolio/PortfolioList'
+
+export const revalidate = 604800 // 7 days
+
 const PortfolioPage = () => {
-  return (
-    <div>
-      <div>Portfolio Page</div>
-    </div>
-  )
+  return <PortfolioList />
 }
 
 export default PortfolioPage
