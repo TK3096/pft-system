@@ -148,3 +148,13 @@ body,
     background-position: 0% 50%;
   }
 }
+
+.mdx-wrapper a {
+  text-decoration: underline;
+  color: rgb(29 78 216);
+  transition: 300ms color;
+}
+
+.mdx-wrapper a:hover {
+  color: var(--primary);
+}

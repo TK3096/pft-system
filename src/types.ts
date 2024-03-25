@@ -1,5 +1,9 @@
 export type RouteType = 'public' | 'private'
 
+export type ApiResponse<T = object> =
+  | { status: true; data: T }
+  | { status: false; error: string }
+
 export type TasksManageStatus = 'active' | 'inactive'
 
 export interface Workspace {
@@ -52,8 +56,10 @@ export enum PortfolioRank {
 export interface Portfolio {
   id: string
   name: string
-  readmeUrl: string
+  owner: string
+  repo: string
   rank: PortfolioRank
   src: string
   demo?: string
+  createdAt: number
 }

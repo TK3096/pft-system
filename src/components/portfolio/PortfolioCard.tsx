@@ -6,12 +6,12 @@ import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { cn } from '@/lib/utils'
 
-interface ProjectCardProps {
+interface PortfolioCardProps {
   name: string
   rank: PortfolioRank
 }
 
-export const ProjectCard = (props: ProjectCardProps) => {
+export const PortfolioCard = (props: PortfolioCardProps) => {
   const { name, rank } = props
 
   return (
