@@ -1,26 +1,27 @@
-import { Portfolio, PortfolioRank } from '@/types'
+import { Portfolio } from '@/types'
 
 import { PortfolioListItem } from '@/components/portfolio/PortfolioListItem'
 
-import data from '@/data/portfolio.json'
+interface PortfolioListProps {
+  portfolio: Portfolio[]
+}
 
-export const PortfolioList = () => {
-  const portfolio: Portfolio[] = data.map((d) => ({
-    id: d.id.toString(),
-    name: d.name,
-    owner: d.owner,
-    repo: d.repo,
-    rank: d.rank as PortfolioRank,
-    src: d.src,
-    demo: d.demo,
-    createdAt: d.createdAt,
-  }))
+export const PortfolioList = (props: PortfolioListProps) => {
+  const { portfolio } = props
 
   return (
-    <div className='grid grid-cols-3 gap-3 p-3'>
+    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-3'>
       {portfolio.map((p) => (
         <div key={p.id}>
-          <PortfolioListItem portfolio={p} />
+          <PortfolioListItem
+            name={p.name}
+            owner={p.owner}
+            repo={p.repo}
+            demo={p.demo || ''}
+            rank={p.rank}
+            src={p.src}
+            createdAt={p.createdAt}
+          />
         </div>
       ))}
     </div>

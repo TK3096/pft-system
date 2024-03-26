@@ -23,14 +23,14 @@ export const PortfolioCard = (props: PortfolioCardProps) => {
       )}
     >
       <Card className='text-primary border-none cursor-pointer w-full h-full py-3 relative overflow-hidden'>
-        <CardHeader className='px-10'>
-          <CardTitle className='text-center font-medium text-nowrap'>
-            <div className='overflow-x-scroll no-scrollbar'>{name}</div>
+        <CardHeader className='md:px-10'>
+          <CardTitle className='text-center font-medium md:text-nowrap text-sm md:text-2xl'>
+            <div className='md:overflow-x-scroll no-scrollbar'>{name}</div>
           </CardTitle>
         </CardHeader>
         <div
           className={cn(
-            'absolute top-5 -left-8 rotate-[-45deg] text-sm font-bold uppercase text-center min-w-[120px] bg-neutral-600',
+            'absolute top-5 -left-8 rotate-[-45deg] text-[10px] md:text-sm font-bold uppercase text-center min-w-[120px] bg-neutral-600',
             rank === PortfolioRank.RARE && 'bg-blue-300',
             rank === PortfolioRank.EPIC && 'bg-red-500',
           )}

@@ -150,11 +150,12 @@ body,
 }
 
 .mdx-wrapper a {
+  @apply text-blue-600;
+
   text-decoration: underline;
-  color: rgb(29 78 216);
   transition: 300ms color;
 }
 
 .mdx-wrapper a:hover {
-  color: var(--primary);
+  @apply text-primary;
 }
