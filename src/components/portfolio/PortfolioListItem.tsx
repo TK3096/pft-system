@@ -1,8 +1,8 @@
-import { Portfolio } from '@/types'
+import { PortfolioRank } from '@/types'
 
-import dayjs from 'dayjs'
 import { Octokit } from 'octokit'
 import { MDXRemote } from 'next-mdx-remote/rsc'
+import dayjs from 'dayjs'
 
 import {
   Drawer,
@@ -16,15 +16,17 @@ import {
 import { PortfolioCard } from '@/components/portfolio/PortfolioCard'
 
 interface PortfolioListItemProps {
-  portfolio: Portfolio
+  name: string
+  owner: string
+  repo: string
+  demo: string
+  rank: PortfolioRank
+  src: string
+  createdAt: number
 }
 
 export const PortfolioListItem = async (props: PortfolioListItemProps) => {
-  const { portfolio } = props
-
-  const { name, owner, repo, demo, rank, src, createdAt } = portfolio
-
-  const date = dayjs.unix(createdAt).format('DD/MM/YYYY')
+  const { name, owner, repo, demo, rank, src, createdAt } = props
 
   const octokit = new Octokit({
     auth: process.env.NEXT_PUBLIC_GITHUB_TOKEN,
@@ -40,6 +42,8 @@ export const PortfolioListItem = async (props: PortfolioListItemProps) => {
   )
 
   const markdown = res.data.toString()
+
+  const date = dayjs.unix(createdAt).format('DD/MM/YYYY')
 
   return (
     <Drawer>

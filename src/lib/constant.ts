@@ -10,6 +10,8 @@ export const BOARDS_COLLECTION = 'boards'
 
 export const TASKS_COLLECTION = 'tasks'
 
+export const PORTFOLIO_COLLECTION = 'portfolio'
+
 export const TASK_STATES = [
   TaskState.TODO,
   TaskState.IN_PROGRESS,
