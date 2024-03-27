@@ -14,12 +14,15 @@ export const KanbanBoard = () => {
 
   const { tasks, boards } = useTasksManagement({ boardId })
 
-  if (tasks.length === 0 || boards.length === 0)
+  const board = boards[0]
+
+  if (tasks.length === 0 || boards.length === 0) {
     return <LandingBox title='Task' description='Create your task' />
+  }
 
   return (
     <div className='h-full w-full px-6'>
-      <BoardContainer tasks={tasks} board={boards[0]} />
+      <BoardContainer tasks={tasks} board={board} />
     </div>
   )
 }

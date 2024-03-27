@@ -1,6 +1,7 @@
 import { Header } from '@/components/tasks-management/navigation/Header'
 import { AddButton } from '@/components/tasks-management/AddButton'
 import { SideMenu } from '@/components/tasks-management/navigation/SidebarMenu'
+import { SearchBox } from '@/components/tasks-management/navigation/SearchBox'
 
 import { cn } from '@/lib/utils'
 
@@ -28,6 +29,14 @@ export const Sidebar = (props: SidebarProps) => {
         <AddButton label={addButtonLabel} type={type} />
       </div>
       <div className='h-[2px] w-3/4 mx-auto my-4 bg-neutral-600' />
+      {type === 'workspace' && (
+        <>
+          <div className='px-4'>
+            <SearchBox />
+          </div>
+          <div className='h-[2px] w-3/4 mx-auto my-4 bg-neutral-600' />
+        </>
+      )}
       <div className='px-4 h-[84%] overflow-scroll'>
         <SideMenu type={type} />
       </div>
