@@ -1,6 +1,16 @@
+import { logout } from '@/actions/logout'
+
 import { Sidebar } from '@/components/navigation/Sidebar'
 
-const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
+import { getCurrentUser } from '@/lib/firebase-sdk/auth'
+
+const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
+  const user = await getCurrentUser()
+
+  if (!user) {
+    await logout()
+  }
+
   return (
     <div className='h-full'>
       <div className='hidden md:block h-full w-[80px] fixed inset-y-0 z-50'>
