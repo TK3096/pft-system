@@ -1,18 +1,11 @@
-import { logout } from '@/actions/logout'
+import { CheckAuth } from '@/components/auth/CheckAuth'
 
 import { Sidebar } from '@/components/navigation/Sidebar'
 
-import { getCurrentUser } from '@/lib/firebase-sdk/auth'
-
-const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
-  const user = await getCurrentUser()
-
-  if (!user) {
-    await logout()
-  }
-
+const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className='h-full'>
+      <CheckAuth />
       <div className='hidden md:block h-full w-[80px] fixed inset-y-0 z-50'>
         <Sidebar type='private' />
       </div>
