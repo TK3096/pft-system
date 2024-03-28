@@ -46,7 +46,7 @@ export const TaskCard = (props: TaskCardProps) => {
         <CardTitle className='text-md font-medium'>
           <div className='flex items-center w-full'>
             <Hash className='w-3 h-3 mr-1' />
-            <div className='overflow-x-scroll w-[270px]'>
+            <div className='overflow-x-scroll w-full md:w-[270px]'>
               <p className='text-nowrap'>{name}</p>
             </div>
 
