@@ -79,7 +79,7 @@ export const PortfolioListItem = async (props: PortfolioListItemProps) => {
             </DrawerDescription>
           </DrawerHeader>
           <div className='p-5'>
-            <div className='overflow-y-scroll h-[50vh] bg-neutral-900 rounded-md px-5 py-3 mdx-wrapper'>
+            <div className='overflow-y-scroll no-scrollbar h-[50vh] bg-neutral-900 rounded-md px-5 py-3 mdx-wrapper'>
               <MDXRemote source={markdown} />
             </div>
           </div>

@@ -245,7 +245,7 @@ export const CreateTaskModal = () => {
                 <FormLabel className='uppercase text-sm font-bold dark:text-zinc-200'>
                   Remarks
                 </FormLabel>
-                <div className='h-[200px] w-full space-y-2 overflow-scroll'>
+                <div className='h-[200px] w-full space-y-2 overflow-scroll no-scrollbar'>
                   {remarkFields.map((remark, index) => (
                     <div
                       key={`remark-${index}`}

@@ -34,7 +34,7 @@ export const SidebarMenu = (props: SidebarMenuProps) => {
   const menus = MENUS.filter((menu) => menu.type === type)
 
   return (
-    <div className='w-full flex flex-1 flex-col items-center gap-y-3 overflow-y-scroll'>
+    <div className='w-full flex flex-1 flex-col items-center gap-y-3 overflow-y-scroll no-scrollbar'>
       {menus.map((menu) => (
         <div key={menu.title}>
           <SidebarItem

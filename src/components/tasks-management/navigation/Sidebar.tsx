@@ -37,7 +37,7 @@ export const Sidebar = (props: SidebarProps) => {
           <div className='h-[2px] w-3/4 mx-auto my-4 bg-neutral-600' />
         </>
       )}
-      <div className='px-4 h-[84%] overflow-scroll'>
+      <div className='px-4 h-[84%] overflow-scroll no-scrollbar'>
         <SideMenu type={type} />
       </div>
     </div>
