@@ -20,3 +20,13 @@ export interface Portfolio {
   demo?: string
   createdAt: number
 }
+
+export interface Workspace {
+  id: string
+  name: string
+  description: string
+  owner: string
+  isDelete: boolean
+  createdAt: string
+  updatedAt: string
+}
