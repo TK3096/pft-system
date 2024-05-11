@@ -1,23 +1,32 @@
 import dayjs from 'dayjs'
-import { Workspace } from './types'
+import { TaskBoard } from './types'
 
-export const workspaces: Workspace[] = [
+export const taskBoards: TaskBoard[] = [
   {
     id: crypto.randomUUID(),
-    name: 'Example Workspace',
-    description: 'This is an example workspace',
-    owner: 'John Doe',
-    isDelete: false,
+    name: 'Task Board 1',
+    description: 'Description of Task Board 1',
+    isDeleted: false,
+    owner: 'user1',
     createdAt: dayjs().toString(),
     updatedAt: dayjs().toString(),
   },
   {
     id: crypto.randomUUID(),
-    name: 'Example Workspace 2',
-    description: 'This is an example workspace 2',
-    owner: 'John Doe',
-    isDelete: false,
-    createdAt: dayjs().toString(),
-    updatedAt: dayjs().toString(),
+    name: 'Task Board 2',
+    description: 'Description of Task Board 2',
+    isDeleted: false,
+    owner: 'user1',
+    createdAt: dayjs().add(1, 'day').toString(),
+    updatedAt: dayjs().add(1, 'day').toString(),
+  },
+  {
+    id: crypto.randomUUID(),
+    name: 'Task Board 3',
+    description: 'Description of Task Board 3',
+    isDeleted: false,
+    owner: 'user1',
+    createdAt: dayjs().add(2, 'day').toString(),
+    updatedAt: dayjs().add(2, 'day').toString(),
   },
 ]

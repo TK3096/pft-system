@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-export type ModalType = null
+export type ModalType = 'create-task-board'
 
 interface ModalData {}
 

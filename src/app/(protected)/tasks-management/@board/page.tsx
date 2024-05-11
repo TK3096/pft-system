@@ -1,9 +1,15 @@
-const BoardPage = () => {
+import { BoardSwitcher } from '@/components/tasks-management/BoardSwitcher'
+import { Separator } from '@/components/ui/separator'
+
+const TaskBoardPage = () => {
   return (
     <div>
-      <h1>BoardPage</h1>
+      <div className='h-[52px] flex items-center px-3'>
+        <BoardSwitcher />
+      </div>
+      <Separator />
     </div>
   )
 }
 
-export default BoardPage
+export default TaskBoardPage

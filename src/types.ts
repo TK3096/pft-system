@@ -21,12 +21,16 @@ export interface Portfolio {
   createdAt: number
 }
 
-export interface Workspace {
+export interface TaskBoard {
   id: string
   name: string
   description: string
+  isDeleted: boolean
   owner: string
-  isDelete: boolean
   createdAt: string
   updatedAt: string
 }
+
+export interface TaskGroup {}
+
+export interface Task {}

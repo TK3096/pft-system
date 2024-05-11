@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
 
-import { TMLayout } from '@/components/tasks-management/TMLayout'
+import { ResizableLayout } from '@/components/tasks-management/ResizableLayout'
+
+import { TasksManagementProvider } from '@/providers/TasksManagementProvider'
 
 export const metadata: Metadata = {
   title: 'PFT System | Tasks Management',
@@ -8,17 +10,19 @@ export const metadata: Metadata = {
 
 const TasksManagementLayout = ({
   board,
+  group,
   task,
-  workspace,
 }: {
   board: React.ReactNode
+  group: React.ReactNode
   task: React.ReactNode
-  workspace: React.ReactNode
 }) => {
   return (
-    <div className='h-full px-4 py-6'>
-      <TMLayout boardSlot={board} taskSlot={task} workspaceSlot={workspace} />
-    </div>
+    <TasksManagementProvider>
+      <div className='h-full px-4 py-6'>
+        <ResizableLayout boardSlot={board} groupSlot={group} taskSlot={task} />
+      </div>
+    </TasksManagementProvider>
   )
 }
 
