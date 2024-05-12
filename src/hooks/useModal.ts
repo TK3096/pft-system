@@ -1,8 +1,12 @@
+import { TaskBoard } from '@/types'
+
 import { create } from 'zustand'
 
-export type ModalType = 'create-task-board'
+export type ModalType = 'create-task-board' | 'update-task-board'
 
-interface ModalData {}
+interface ModalData {
+  taskBoard: TaskBoard
+}
 
 interface ModalStore {
   type: ModalType | null
@@ -14,7 +18,8 @@ interface ModalStore {
 
 export const useModal = create<ModalStore>((set) => ({
   type: null,
+  data: undefined,
   open: false,
   onOpen: (type, data) => set({ type, open: true, data }),
-  onClose: () => set({ open: false }),
+  onClose: () => set({ open: false, type: null, data: undefined }),
 }))

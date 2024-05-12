@@ -6,6 +6,6 @@ export const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs))
 }
 
-export const createTimestamp = () => {
-  return dayjs().unix()
+export const getCurrentDate = () => {
+  return dayjs().format()
 }
