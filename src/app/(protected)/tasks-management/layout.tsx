@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import { ResizableLayout } from '@/components/tasks-management/ResizableLayout'
 
 import { TasksManagementProvider } from '@/providers/TasksManagementProvider'
+import { Suspense } from 'react'
 
 export const metadata: Metadata = {
   title: 'PFT System | Tasks Management',
@@ -19,9 +20,15 @@ const TasksManagementLayout = ({
 }) => {
   return (
     <TasksManagementProvider>
-      <div className='h-full px-4 py-6'>
-        <ResizableLayout boardSlot={board} groupSlot={group} taskSlot={task} />
-      </div>
+      <Suspense>
+        <div className='h-full px-4 py-6'>
+          <ResizableLayout
+            boardSlot={board}
+            groupSlot={group}
+            taskSlot={task}
+          />
+        </div>
+      </Suspense>
     </TasksManagementProvider>
   )
 }
