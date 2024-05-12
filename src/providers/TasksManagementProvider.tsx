@@ -1,17 +1,22 @@
 'use client'
 
-import { TaskBoard } from '@/types'
+import { TaskBoard, TaskGroup } from '@/types'
 
 import { createContext, useEffect, useState } from 'react'
 
-import { taskBoards as taskBoardsData } from '@/mock-up-data'
+import {
+  taskBoards as taskBoardsData,
+  taskGroups as taskGroupsData,
+} from '@/mock-up-data'
 
 interface TasksManagementContext {
   taskBoards: TaskBoard[]
+  taskGroups: TaskGroup[]
 }
 
 const defaultValues: TasksManagementContext = {
   taskBoards: [],
+  taskGroups: [],
 }
 
 const TasksManagementContext =
@@ -23,13 +28,16 @@ export const TasksManagementProvider = ({
   children: React.ReactNode
 }) => {
   const [taskBoards, setTaskBoards] = useState<TaskBoard[]>([])
+  const [taskGroups, setTaskGroups] = useState<TaskGroup[]>([])
 
   useEffect(() => {
     setTaskBoards(taskBoardsData)
+    setTaskGroups(taskGroupsData)
   }, [])
 
   const value = {
     taskBoards,
+    taskGroups,
   }
 
   return (

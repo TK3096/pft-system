@@ -31,6 +31,15 @@ export interface TaskBoard {
   updatedAt: string
 }
 
-export interface TaskGroup {}
+export interface TaskGroup {
+  id: string
+  bordId: string
+  name: string
+  description: string
+  owner: string
+  isDeleted: boolean
+  createdAt: string
+  updatedAt: string
+}
 
 export interface Task {}

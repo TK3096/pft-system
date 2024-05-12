@@ -21,8 +21,8 @@ export const ResizableLayout: React.FC<ResizableLayoutProps> = (
   const { boardSlot, taskSlot, groupSlot } = props
 
   const searchParams = useSearchParams()
-  const groupQuery = searchParams.get('group')
-  const taskQuery = searchParams.get('task')
+  const groupId = searchParams.get('g')
+  const taskId = searchParams.get('t')
 
   return (
     <ResizablePanelGroup
@@ -30,13 +30,13 @@ export const ResizableLayout: React.FC<ResizableLayoutProps> = (
       className='rounded-md dark:bg-neutral-900/90'
     >
       <ResizablePanel>{boardSlot}</ResizablePanel>
-      {groupQuery && (
+      {groupId && (
         <>
           <ResizableHandle withHandle />
           <ResizablePanel>{groupSlot}</ResizablePanel>
         </>
       )}
-      {groupQuery && taskQuery && (
+      {groupId && taskId && (
         <>
           <ResizableHandle withHandle />
           <ResizablePanel>{taskSlot}</ResizablePanel>
