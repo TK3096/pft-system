@@ -13,7 +13,7 @@ export const GroupList: React.FC = () => {
 
   const boardId = searchParams.get('b')
 
-  const { taskGroups } = useTasksManagement()
+  const { taskGroups, isCollapsed } = useTasksManagement()
 
   const groups = taskGroups.filter((group) => group.bordId === boardId)
 
@@ -28,6 +28,7 @@ export const GroupList: React.FC = () => {
               label={group.name}
               boardId={boardId}
               amount={1}
+              isCollapsed={isCollapsed}
             />
           ))}
       </nav>

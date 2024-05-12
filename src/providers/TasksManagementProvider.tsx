@@ -12,11 +12,15 @@ import {
 interface TasksManagementContext {
   taskBoards: TaskBoard[]
   taskGroups: TaskGroup[]
+  isCollapsed: boolean
+  onCollapsed: (value: boolean) => void
 }
 
 const defaultValues: TasksManagementContext = {
   taskBoards: [],
   taskGroups: [],
+  isCollapsed: false,
+  onCollapsed: (value: boolean) => {},
 }
 
 const TasksManagementContext =
@@ -29,6 +33,7 @@ export const TasksManagementProvider = ({
 }) => {
   const [taskBoards, setTaskBoards] = useState<TaskBoard[]>([])
   const [taskGroups, setTaskGroups] = useState<TaskGroup[]>([])
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
 
   useEffect(() => {
     setTaskBoards(taskBoardsData)
@@ -38,6 +43,8 @@ export const TasksManagementProvider = ({
   const value = {
     taskBoards,
     taskGroups,
+    isCollapsed,
+    onCollapsed: setIsCollapsed,
   }
 
   return (
