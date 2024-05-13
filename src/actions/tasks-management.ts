@@ -4,13 +4,14 @@ import * as z from 'zod'
 
 import {
   CreateTaskBoardSchema,
+  CreateTaskGroupSchema,
   UpdateTaskBoardSchema,
 } from '@/schemas/tasks-management'
 
 import { getCurrentUser } from '@/lib/firebase-sdk/auth'
 import { getCurrentDate } from '@/lib/utils'
 
-import { taskBoards } from '@/mock-up-data'
+import { taskBoards, taskGroups } from '@/mock-up-data'
 
 export const createTaskBoard = async (
   values: z.infer<typeof CreateTaskBoardSchema>,
@@ -64,4 +65,37 @@ export const updateTaskBoard = async (
   const date = getCurrentDate()
 
   return { success: true }
+}
+
+export const createTaskGroup = async (
+  values: z.infer<typeof CreateTaskGroupSchema>,
+) => {
+  const user = await getCurrentUser()
+
+  if (!user) {
+    return { error: 'Unauthorized' }
+  }
+
+  const validatedFields = CreateTaskGroupSchema.safeParse(values)
+
+  if (!validatedFields.success) {
+    return { error: 'Invalid fields' }
+  }
+
+  const { name, boardId, description } = validatedFields.data
+  const date = getCurrentDate()
+
+  const id = crypto.randomUUID()
+  taskGroups.push({
+    id: id,
+    name,
+    description,
+    boardId,
+    isDeleted: false,
+    owner: user.uid,
+    createdAt: date,
+    updatedAt: date,
+  })
+
+  return { success: { id } }
 }

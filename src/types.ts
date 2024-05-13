@@ -33,7 +33,7 @@ export interface TaskBoard {
 
 export interface TaskGroup {
   id: string
-  bordId: string
+  boardId: string
   name: string
   description: string
   owner: string

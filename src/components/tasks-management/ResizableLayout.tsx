@@ -33,7 +33,7 @@ export const ResizableLayout: React.FC<ResizableLayoutProps> = (
   return (
     <ResizablePanelGroup
       direction='horizontal'
-      className='rounded-md dark:bg-neutral-900/90'
+      className='dark:bg-neutral-900/90'
     >
       <ResizablePanel
         id='task-board'

@@ -21,7 +21,7 @@ const TasksManagementLayout = ({
   return (
     <TasksManagementProvider>
       <Suspense>
-        <div className='h-full px-4 py-6'>
+        <div className='h-full'>
           <ResizableLayout
             boardSlot={board}
             groupSlot={group}

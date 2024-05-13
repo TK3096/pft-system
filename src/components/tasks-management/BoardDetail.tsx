@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import { useSearchParams } from 'next/navigation'
 
 import { Edit } from 'lucide-react'
 
@@ -13,13 +12,18 @@ import { ActionTooltip } from '@/components/common/ActionTooltip'
 
 import { cn } from '@/lib/utils'
 
-export const BoardDetail: React.FC = () => {
-  const searchParams = useSearchParams()
+interface BoardDetailProps {
+  boardId?: string
+}
+
+export const BoardDetail: React.FC<BoardDetailProps> = (
+  props: BoardDetailProps,
+) => {
+  const { boardId } = props
 
   const { taskBoards, isCollapsed } = useTasksManagement()
   const { onOpen } = useModal()
 
-  const boardId = searchParams.get('b')
   const board = taskBoards.find((board) => board.id === boardId)
 
   if (!board) {
@@ -31,7 +35,7 @@ export const BoardDetail: React.FC = () => {
   }
 
   return (
-    <div className='flex justify-between gap-2'>
+    <div className='flex justify-between gap-2 px-3 py-4'>
       <p
         className={cn('text-muted-foreground text-sm', isCollapsed && 'hidden')}
       >

@@ -34,7 +34,7 @@ export const taskBoards: TaskBoard[] = [
 export const taskGroups: TaskGroup[] = [
   {
     id: '816e0b0c-3e3a-4b8c-b2fc-2e168e9f7123',
-    bordId: '816e0b0c-3e3a-4b8c-b2fc-2e168e9f7761',
+    boardId: '816e0b0c-3e3a-4b8c-b2fc-2e168e9f7761',
     name: 'board 1 group 1',
     description: 'Description of board 1 group 1',
     owner: 'user1',
@@ -44,7 +44,7 @@ export const taskGroups: TaskGroup[] = [
   },
   {
     id: '816e0b0c-3e3a-4b8c-b2fc-2e168e9f7456',
-    bordId: '816e0b0c-3e3a-4b8c-b2fc-2e168e9f7761',
+    boardId: '816e0b0c-3e3a-4b8c-b2fc-2e168e9f7761',
     name: 'board 1 group 2',
     description: 'Description of board 1 group 2',
     owner: 'user1',
@@ -54,7 +54,7 @@ export const taskGroups: TaskGroup[] = [
   },
   {
     id: '816e0b0c-3e3a-4b8c-b2fc-2e168e9f7999',
-    bordId: '31b0933e-fd87-443f-a73f-c5c284889e07',
+    boardId: '31b0933e-fd87-443f-a73f-c5c284889e07',
     name: 'board 2 group 3',
     description: 'Description of board 2 group 3',
     owner: 'user1',

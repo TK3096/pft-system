@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import qs from 'query-string'
 
@@ -17,7 +17,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from '@/components/ui/command'
 import {
   DropdownMenu,
@@ -28,11 +27,16 @@ import {
 import { ActionTooltip } from '@/components/common/ActionTooltip'
 import { Separator } from '../ui/separator'
 
-export const BoardSwitcher = () => {
-  const router = useRouter()
-  const searchParams = useSearchParams()
+interface BoardSwitcherProps {
+  boardId?: string
+}
 
-  const boardId = searchParams.get('b')
+export const BoardSwitcher: React.FC<BoardSwitcherProps> = (
+  props: BoardSwitcherProps,
+) => {
+  const { boardId } = props
+
+  const router = useRouter()
 
   const [selected, setSelected] = useState<string>(boardId || '')
 

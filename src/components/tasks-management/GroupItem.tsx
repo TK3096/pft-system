@@ -35,9 +35,9 @@ export const GroupItem: React.FC<GroupItemProps> = (props: GroupItemProps) => {
           <span>{label}</span>
         </div>
         <div className={cn('block', isCollapsed && 'hidden')}>{amount}</div>
-        <div className={cn('hidden', isCollapsed && 'block')}>
+        <div className={cn('hidden', isCollapsed && 'block w-full')}>
           <ActionTooltip label={label} side='right' align='center'>
-            <ArchiveIcon className='w-5 h-5' />
+            <ArchiveIcon className='w-5 h-5 mx-auto' />
           </ActionTooltip>
         </div>
       </div>

@@ -1,75 +1,88 @@
 'use client'
 
-import React, { useTransition, useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useEffect, useState, useTransition } from 'react'
+import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
+import { useRouter } from 'next/navigation'
+import qs from 'query-string'
 
-import { UpdateTaskBoardSchema } from '@/schemas/tasks-management'
+import { createTaskGroup } from '@/actions/tasks-management'
 
-import { updateTaskBoard } from '@/actions/tasks-management'
+import { CreateTaskGroupSchema } from '@/schemas/tasks-management'
 
 import { useModal } from '@/hooks/useModal'
+import { useTasksManagement } from '@/hooks/useTasksManagement'
 
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormItem,
+  FormMessage,
+  FormField,
+  FormLabel,
+} from '@/components/ui/form'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
   DialogFooter,
+  DialogTitle,
 } from '@/components/ui/dialog'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-  FormLabel,
-} from '@/components/ui/form'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { FormError } from '@/components/common/FormError'
-import { Checkbox } from '@/components/ui/checkbox'
 
-export const UpdateTaskBoardModal = () => {
+export const CreateTaskGroupModal: React.FC = () => {
   const router = useRouter()
 
   const [isPending, startTransition] = useTransition()
+
   const [error, setError] = useState<string>('')
 
-  const { open, type, onClose, data } = useModal()
+  const { open, type, data, onClose } = useModal()
 
   const form = useForm({
-    resolver: zodResolver(UpdateTaskBoardSchema),
+    resolver: zodResolver(CreateTaskGroupSchema),
     defaultValues: {
       name: '',
       description: '',
-      isDeleted: false,
+      boardId: '',
     },
   })
 
-  const id = data?.taskBoard.id!
-  const isOpen = open && type === 'update-task-board'
-  const loading = isPending || form.formState.isSubmitting
+  const boardId = data?.taskBoard.id
+  const isOpen = type === 'create-task-group' && open
+  const loading = form.formState.isSubmitting || isPending
   const isDirty = form.formState.isDirty
 
-  const handleSubmitForm = (values: z.infer<typeof UpdateTaskBoardSchema>) => {
-    startTransition(async () => {
-      const res = await updateTaskBoard(id, values)
+  const handleSubmitForm = (values: z.infer<typeof CreateTaskGroupSchema>) => {
+    setError('')
 
-      if (res?.error) {
-        setError(res.error)
-        return
-      }
+    try {
+      startTransition(async () => {
+        const res = await createTaskGroup(values)
 
-      if (res?.success) {
-        handleClose()
-        router.refresh()
-      }
-    })
+        if (res?.error) {
+          setError(res.error)
+          return
+        }
+
+        if (res?.success) {
+          const url = qs.stringifyUrl({
+            url: '/tasks-management',
+            query: { b: boardId, g: res.success.id },
+          })
+
+          router.replace(url)
+          handleClose()
+        }
+      })
+    } catch {
+      setError('Something went wrong')
+    }
   }
 
   const handleClose = () => {
@@ -78,22 +91,20 @@ export const UpdateTaskBoardModal = () => {
   }
 
   useEffect(() => {
-    if (data?.taskBoard) {
-      form.setValue('name', data.taskBoard.name)
-      form.setValue('description', data.taskBoard.description)
-      form.setValue('isDeleted', data.taskBoard.isDeleted)
+    if (boardId) {
+      form.setValue('boardId', boardId)
     }
-  }, [data?.taskBoard, form])
+  }, [boardId, form])
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className='p-0 overflow-hidden w-3/5'>
         <DialogHeader className='pt-8 pb-13 px-6'>
           <DialogTitle className='text-2xl text-center font-bold'>
-            Update Board
+            Create Task Group
           </DialogTitle>
           <DialogDescription className='text-center text-zinc-500'>
-            Update board details
+            Create a new task group to organize your tasks
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -102,6 +113,18 @@ export const UpdateTaskBoardModal = () => {
             className='space-y-8'
           >
             <div className='space-y-2 px-6'>
+              <div className='space-y-2'>
+                <FormLabel className='uppercase text-sm font-bold dark:text-zinc-200'>
+                  Board
+                </FormLabel>
+                <Input
+                  type='text'
+                  className='boarder-none dark:bg-stone-900/50'
+                  defaultValue={data?.taskBoard.name || ''}
+                  disabled
+                />
+              </div>
+
               <FormField
                 name='name'
                 control={form.control}
@@ -111,13 +134,13 @@ export const UpdateTaskBoardModal = () => {
                       htmlFor='name'
                       className='uppercase text-sm font-bold dark:text-zinc-200'
                     >
-                      Name
+                      name
                     </FormLabel>
                     <FormControl>
                       <Input
                         id='name'
                         type='text'
-                        placeholder='Board name'
+                        placeholder='Group name'
                         className='boarder-none dark:bg-stone-900/50'
                         disabled={loading}
                         {...field}
@@ -143,7 +166,7 @@ export const UpdateTaskBoardModal = () => {
                       <Textarea
                         id='description'
                         rows={3}
-                        placeholder='Board description'
+                        placeholder='Group description'
                         className='boarder-none dark:bg-stone-900/50'
                         disabled={loading}
                         {...field}
@@ -153,25 +176,6 @@ export const UpdateTaskBoardModal = () => {
                   </FormItem>
                 )}
               />
-
-              <FormField
-                name='isDeleted'
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem className='flex items-end gap-2'>
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormLabel className='text-zinc-400'>
-                      <span>Delete this task board</span>
-                    </FormLabel>
-                  </FormItem>
-                )}
-              />
-
               {error && <FormError message={error} />}
             </div>
 
@@ -187,9 +191,9 @@ export const UpdateTaskBoardModal = () => {
               <Button
                 type='submit'
                 variant='primary'
-                disabled={loading || !isDirty}
+                disabled={!isDirty || loading}
               >
-                Update
+                Create
               </Button>
             </DialogFooter>
           </form>

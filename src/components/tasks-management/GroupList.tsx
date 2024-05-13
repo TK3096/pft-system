@@ -1,24 +1,25 @@
 'use client'
 
 import React from 'react'
-import { useSearchParams } from 'next/navigation'
 
 import { useTasksManagement } from '@/hooks/useTasksManagement'
 
 import { GroupItem } from '@/components/tasks-management/GroupItem'
 import { ScrollArea } from '../ui/scroll-area'
 
-export const GroupList: React.FC = () => {
-  const searchParams = useSearchParams()
+interface GroupListProps {
+  boardId?: string
+}
 
-  const boardId = searchParams.get('b')
+export const GroupList: React.FC<GroupListProps> = (props: GroupListProps) => {
+  const { boardId } = props
 
   const { taskGroups, isCollapsed } = useTasksManagement()
 
-  const groups = taskGroups.filter((group) => group.bordId === boardId)
+  const groups = taskGroups.filter((group) => group.boardId === boardId)
 
   return (
-    <ScrollArea className='h-[80vh]'>
+    <ScrollArea className='h-full px-3 py-4'>
       <nav className='grid gap-1'>
         {boardId &&
           groups.map((group) => (

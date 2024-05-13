@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react'
 
-import { CreateTaskBoard } from '@/components/modals/CreateTaskBoard'
-import { UpdateTaskBoardModal } from '@/components/modals/UpdateTaskBoard'
+import { CreateTaskBoardModal } from '@/components/modals/CreateTaskBoardModal'
+import { UpdateTaskBoardModal } from '@/components/modals/UpdateTaskBoardModal'
+import { CreateTaskGroupModal } from '@/components/modals/CreateTaskGroupModal'
 
 export const ModalProvider = () => {
   const [mounted, setMounted] = useState(false)
@@ -16,8 +17,9 @@ export const ModalProvider = () => {
 
   return (
     <>
-      <CreateTaskBoard />
+      <CreateTaskBoardModal />
       <UpdateTaskBoardModal />
+      <CreateTaskGroupModal />
     </>
   )
 }

@@ -1,15 +1,14 @@
 'use client'
 
-import React, { useTransition, useState } from 'react'
+import React, { useTransition, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import qs from 'query-string'
 
-import { CreateTaskBoardSchema } from '@/schemas/tasks-management'
+import { UpdateTaskBoardSchema } from '@/schemas/tasks-management'
 
-import { createTaskBoard } from '@/actions/tasks-management'
+import { updateTaskBoard } from '@/actions/tasks-management'
 
 import { useModal } from '@/hooks/useModal'
 
@@ -33,49 +32,50 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { FormError } from '@/components/common/FormError'
+import { Checkbox } from '@/components/ui/checkbox'
 
-export const CreateTaskBoard = () => {
+export const UpdateTaskBoardModal = () => {
   const router = useRouter()
 
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string>('')
 
-  const { open, type, onClose } = useModal()
+  const { open, type, onClose, data } = useModal()
 
   const form = useForm({
-    resolver: zodResolver(CreateTaskBoardSchema),
+    resolver: zodResolver(UpdateTaskBoardSchema),
     defaultValues: {
       name: '',
       description: '',
+      isDeleted: false,
     },
   })
 
-  const isOpen = open && type === 'create-task-board'
+  const id = data?.taskBoard.id!
+  const isOpen = open && type === 'update-task-board'
   const loading = isPending || form.formState.isSubmitting
   const isDirty = form.formState.isDirty
 
-  const handleSubmitForm = (values: z.infer<typeof CreateTaskBoardSchema>) => {
-    startTransition(async () => {
-      const res = await createTaskBoard(values)
+  const handleSubmitForm = (values: z.infer<typeof UpdateTaskBoardSchema>) => {
+    setError('')
 
-      if (res?.error) {
-        setError(res.error)
-        return
-      }
+    try {
+      startTransition(async () => {
+        const res = await updateTaskBoard(id, values)
 
-      if (res?.success) {
-        const url = qs.stringifyUrl({
-          url: '/tasks-management',
-          query: {
-            b: res.success.id,
-          },
-        })
+        if (res?.error) {
+          setError(res.error)
+          return
+        }
 
-        router.replace(url)
-
-        handleClose()
-      }
-    })
+        if (res?.success) {
+          handleClose()
+          router.refresh()
+        }
+      })
+    } catch {
+      setError('Something went wrong')
+    }
   }
 
   const handleClose = () => {
@@ -83,15 +83,23 @@ export const CreateTaskBoard = () => {
     onClose()
   }
 
+  useEffect(() => {
+    if (data?.taskBoard) {
+      form.setValue('name', data.taskBoard.name)
+      form.setValue('description', data.taskBoard.description)
+      form.setValue('isDeleted', data.taskBoard.isDeleted)
+    }
+  }, [data?.taskBoard, form])
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className='p-0 overflow-hidden w-3/5'>
         <DialogHeader className='pt-8 pb-13 px-6'>
           <DialogTitle className='text-2xl text-center font-bold'>
-            Create a New Board
+            Update Board
           </DialogTitle>
           <DialogDescription className='text-center text-zinc-500'>
-            This will create a new board for you to manage your tasks.
+            Update board details
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -151,6 +159,25 @@ export const CreateTaskBoard = () => {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                name='isDeleted'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className='flex items-end gap-2'>
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormLabel className='text-zinc-400'>
+                      <span>Delete this task board</span>
+                    </FormLabel>
+                  </FormItem>
+                )}
+              />
+
               {error && <FormError message={error} />}
             </div>
 
@@ -168,7 +195,7 @@ export const CreateTaskBoard = () => {
                 variant='primary'
                 disabled={loading || !isDirty}
               >
-                Create
+                Update
               </Button>
             </DialogFooter>
           </form>
