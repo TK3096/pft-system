@@ -51,7 +51,7 @@ export const UpdateTaskBoardModal = () => {
     },
   })
 
-  const id = data?.taskBoard.id!
+  const id = data?.taskBoard?.id!
   const isOpen = open && type === 'update-task-board'
   const loading = isPending || form.formState.isSubmitting
   const isDirty = form.formState.isDirty

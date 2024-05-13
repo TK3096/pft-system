@@ -5,11 +5,10 @@ import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import qs from 'query-string'
 
-import { createTaskGroup } from '@/actions/tasks-management'
+import { updateTaskGroup } from '@/actions/tasks-management'
 
-import { CreateTaskGroupSchema } from '@/schemas/tasks-management'
+import { UpdateTaskGroupSchema } from '@/schemas/tasks-management'
 
 import { useModal } from '@/hooks/useModal'
 
@@ -33,8 +32,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { FormError } from '@/components/common/FormError'
+import { Checkbox } from '@/components/ui/checkbox'
 
-export const CreateTaskGroupModal: React.FC = () => {
+export const UpdateTaskGroupModal: React.FC = () => {
   const router = useRouter()
 
   const [isPending, startTransition] = useTransition()
@@ -44,25 +44,26 @@ export const CreateTaskGroupModal: React.FC = () => {
   const { open, type, data, onClose } = useModal()
 
   const form = useForm({
-    resolver: zodResolver(CreateTaskGroupSchema),
+    resolver: zodResolver(UpdateTaskGroupSchema),
     defaultValues: {
       name: '',
       description: '',
       boardId: '',
+      isDeleted: false,
     },
   })
 
-  const boardId = data?.taskBoard?.id
-  const isOpen = type === 'create-task-group' && open
+  const groupId = data?.taskGroup?.id!
+  const isOpen = type === 'update-task-group' && open
   const loading = form.formState.isSubmitting || isPending
   const isDirty = form.formState.isDirty
 
-  const handleSubmitForm = (values: z.infer<typeof CreateTaskGroupSchema>) => {
+  const handleSubmitForm = (values: z.infer<typeof UpdateTaskGroupSchema>) => {
     setError('')
 
     try {
       startTransition(async () => {
-        const res = await createTaskGroup(values)
+        const res = await updateTaskGroup(groupId, values)
 
         if (res?.error) {
           setError(res.error)
@@ -70,12 +71,7 @@ export const CreateTaskGroupModal: React.FC = () => {
         }
 
         if (res?.success) {
-          const url = qs.stringifyUrl({
-            url: '/tasks-management',
-            query: { b: boardId, g: res.success.id },
-          })
-
-          router.replace(url)
+          router.refresh()
           handleClose()
         }
       })
@@ -90,10 +86,13 @@ export const CreateTaskGroupModal: React.FC = () => {
   }
 
   useEffect(() => {
-    if (boardId) {
-      form.setValue('boardId', boardId)
+    if (data?.taskGroup) {
+      form.setValue('boardId', data.taskGroup.boardId)
+      form.setValue('name', data.taskGroup.name)
+      form.setValue('description', data.taskGroup.description)
+      form.setValue('isDeleted', data.taskGroup.isDeleted)
     }
-  }, [boardId, form])
+  }, [data?.taskGroup, form])
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -175,6 +174,25 @@ export const CreateTaskGroupModal: React.FC = () => {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                name='isDeleted'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className='flex items-end gap-2'>
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormLabel className='text-zinc-400'>
+                      <span>Delete this task group</span>
+                    </FormLabel>
+                  </FormItem>
+                )}
+              />
+
               {error && <FormError message={error} />}
             </div>
 
@@ -192,7 +210,7 @@ export const CreateTaskGroupModal: React.FC = () => {
                 variant='primary'
                 disabled={!isDirty || loading}
               >
-                Create
+                Update
               </Button>
             </DialogFooter>
           </form>

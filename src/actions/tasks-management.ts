@@ -6,6 +6,7 @@ import {
   CreateTaskBoardSchema,
   CreateTaskGroupSchema,
   UpdateTaskBoardSchema,
+  UpdateTaskGroupSchema,
 } from '@/schemas/tasks-management'
 
 import { getCurrentUser } from '@/lib/firebase-sdk/auth'
@@ -98,4 +99,26 @@ export const createTaskGroup = async (
   })
 
   return { success: { id } }
+}
+
+export const updateTaskGroup = async (
+  id: string,
+  values: z.infer<typeof UpdateTaskGroupSchema>,
+) => {
+  const user = await getCurrentUser()
+
+  if (!user) {
+    return { error: 'Unauthorized' }
+  }
+
+  const validatedFields = UpdateTaskGroupSchema.safeParse(values)
+
+  if (!validatedFields.success) {
+    return { error: 'Invalid fields' }
+  }
+
+  const { name, description, isDeleted, boardId } = validatedFields.data
+  const date = getCurrentDate()
+
+  return { success: true }
 }
