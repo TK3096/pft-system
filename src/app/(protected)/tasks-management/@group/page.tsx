@@ -1,3 +1,4 @@
+import { GroupContent } from '@/components/tasks-management/GroupContent'
 import { GroupHeader } from '@/components/tasks-management/GroupHeader'
 import { Separator } from '@/components/ui/separator'
 
@@ -13,7 +14,7 @@ const TaskGroupPage = ({
     <div className='h-full'>
       <GroupHeader groupId={groupId} />
       <Separator />
-      <h1>TaskGroupPage</h1>
+      <GroupContent groupId={groupId} />
     </div>
   )
 }

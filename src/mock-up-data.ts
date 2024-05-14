@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { TaskBoard, TaskGroup } from './types'
+import { TaskBoard, TaskGroup, Task, TaskStatus } from './types'
 
 export const taskBoards: TaskBoard[] = [
   {
@@ -60,6 +60,48 @@ export const taskGroups: TaskGroup[] = [
     owner: 'user1',
     isDeleted: false,
     createdAt: dayjs().add(2, 'day').toString(),
+    updatedAt: dayjs().toString(),
+  },
+]
+
+export const tasks: Task[] = [
+  {
+    id: '816e0b0c-3e3a-4b8c-b2fc-2e1a9f7123',
+    groupId: '816e0b0c-3e3a-4b8c-b2fc-2e168e9f7123',
+    tag: 'Bug',
+    name: 'Task 1 qweqweqweqweqweqweqwekllsad',
+    description: 'Task 1 description',
+    isDeleted: false,
+    status: TaskStatus.TODO,
+    owner: 'user1',
+    remarks: [],
+    createdAt: dayjs().toString(),
+    updatedAt: dayjs().toString(),
+  },
+  {
+    id: '816e0b0c-3e3a-4b8c-b2fc-2e1a9f7124',
+    groupId: '816e0b0c-3e3a-4b8c-b2fc-2e168e9f7123',
+    tag: 'Feature',
+    name: 'Task 2',
+    description: 'Task 2 description',
+    isDeleted: false,
+    status: TaskStatus.TODO,
+    owner: 'user1',
+    remarks: [],
+    createdAt: dayjs().toString(),
+    updatedAt: dayjs().toString(),
+  },
+  {
+    id: '816e0b0c-3e3a-4b8c-b2fc-2e1a9f7125',
+    groupId: '816e0b0c-3e3a-4b8c-b2fc-2e168e9f7123',
+    tag: 'Feature',
+    name: 'Task 3',
+    description: 'Task 3 description',
+    isDeleted: false,
+    status: TaskStatus.TESTING,
+    owner: 'user1',
+    remarks: [],
+    createdAt: dayjs().toString(),
     updatedAt: dayjs().toString(),
   },
 ]

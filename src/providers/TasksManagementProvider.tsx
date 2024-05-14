@@ -1,17 +1,19 @@
 'use client'
 
-import { TaskBoard, TaskGroup } from '@/types'
+import { TaskBoard, TaskGroup, Task } from '@/types'
 
 import { createContext, useEffect, useState } from 'react'
 
 import {
   taskBoards as taskBoardsData,
   taskGroups as taskGroupsData,
+  tasks as tasksData,
 } from '@/mock-up-data'
 
 interface TasksManagementContext {
   taskBoards: TaskBoard[]
   taskGroups: TaskGroup[]
+  tasks: Task[]
   isCollapsed: boolean
   onCollapsed: (value: boolean) => void
 }
@@ -19,6 +21,7 @@ interface TasksManagementContext {
 const defaultValues: TasksManagementContext = {
   taskBoards: [],
   taskGroups: [],
+  tasks: [],
   isCollapsed: false,
   onCollapsed: (value: boolean) => {},
 }
@@ -33,16 +36,19 @@ export const TasksManagementProvider = ({
 }) => {
   const [taskBoards, setTaskBoards] = useState<TaskBoard[]>([])
   const [taskGroups, setTaskGroups] = useState<TaskGroup[]>([])
+  const [tasks, setTaskss] = useState<Task[]>([])
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
 
   useEffect(() => {
     setTaskBoards(taskBoardsData)
     setTaskGroups(taskGroupsData)
+    setTaskss(tasksData)
   }, [])
 
   const value = {
     taskBoards,
     taskGroups,
+    tasks,
     isCollapsed,
     onCollapsed: setIsCollapsed,
   }

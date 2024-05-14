@@ -8,6 +8,7 @@ import { useTasksManagement } from '@/hooks/useTasksManagement'
 import { useModal } from '@/hooks/useModal'
 
 import { Button } from '@/components/ui/button'
+import { ActionTooltip } from '@/components/common/ActionTooltip'
 
 interface GroupHeaderProps {
   groupId: string
@@ -35,14 +36,16 @@ export const GroupHeader: React.FC<GroupHeaderProps> = (
   return (
     <div className='h-[52px] px-3 py-2 flex items-center justify-between gap-3'>
       <h1 className='text-lg font-bold capitalize'>{group.name}</h1>
-      <Button
-        size='icon'
-        variant='ghost'
-        className='w-5 h-5'
-        onClick={handleEdit}
-      >
-        <Edit className='w-5 h-5' />
-      </Button>
+      <ActionTooltip label='Edit Group'>
+        <Button
+          size='icon'
+          variant='ghost'
+          className='w-5 h-5'
+          onClick={handleEdit}
+        >
+          <Edit className='w-5 h-5' />
+        </Button>
+      </ActionTooltip>
     </div>
   )
 }

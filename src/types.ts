@@ -42,4 +42,23 @@ export interface TaskGroup {
   updatedAt: string
 }
 
-export interface Task {}
+export enum TaskStatus {
+  TODO = 'todo',
+  IN_PROGRESS = 'in_progress',
+  TESTING = 'testing',
+  DONE = 'done',
+}
+
+export interface Task {
+  id: string
+  groupId: string
+  tag: string
+  name: string
+  description: string
+  isDeleted: boolean
+  status: TaskStatus
+  owner: string
+  remarks: string[]
+  createdAt: string
+  updatedAt: string
+}
