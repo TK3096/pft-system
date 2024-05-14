@@ -118,7 +118,7 @@ export const CreateTaskGroupModal: React.FC = () => {
                 </FormLabel>
                 <Input
                   type='text'
-                  className='boarder-none dark:bg-stone-900/50'
+                  className='border-none dark:bg-stone-900/50'
                   defaultValue={data?.taskBoard?.name || ''}
                   disabled
                 />
@@ -140,7 +140,7 @@ export const CreateTaskGroupModal: React.FC = () => {
                         id='name'
                         type='text'
                         placeholder='Group name'
-                        className='boarder-none dark:bg-stone-900/50'
+                        className='border-none dark:bg-stone-900/50'
                         disabled={loading}
                         {...field}
                       />
@@ -164,9 +164,9 @@ export const CreateTaskGroupModal: React.FC = () => {
                     <FormControl>
                       <Textarea
                         id='description'
-                        rows={3}
+                        rows={5}
                         placeholder='Group description'
-                        className='boarder-none dark:bg-stone-900/50'
+                        className='border-none dark:bg-stone-900/50'
                         disabled={loading}
                         {...field}
                       />

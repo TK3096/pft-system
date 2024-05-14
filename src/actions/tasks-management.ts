@@ -7,12 +7,13 @@ import {
   CreateTaskGroupSchema,
   UpdateTaskBoardSchema,
   UpdateTaskGroupSchema,
+  CreateTaskSchema,
 } from '@/schemas/tasks-management'
 
 import { getCurrentUser } from '@/lib/firebase-sdk/auth'
 import { getCurrentDate } from '@/lib/utils'
 
-import { taskBoards, taskGroups } from '@/mock-up-data'
+import { taskBoards, taskGroups, tasks } from '@/mock-up-data'
 
 export const createTaskBoard = async (
   values: z.infer<typeof CreateTaskBoardSchema>,
@@ -121,4 +122,39 @@ export const updateTaskGroup = async (
   const date = getCurrentDate()
 
   return { success: true }
+}
+
+export const createTask = async (values: z.infer<typeof CreateTaskSchema>) => {
+  const user = await getCurrentUser()
+
+  if (!user) {
+    return { error: 'Unauthorized' }
+  }
+
+  const validatedFields = CreateTaskSchema.safeParse(values)
+
+  if (!validatedFields.success) {
+    return { error: 'Invalid fields' }
+  }
+
+  const { groupId, name, description, status, remarks, tag } =
+    validatedFields.data
+  const date = getCurrentDate()
+
+  const id = crypto.randomUUID()
+  tasks.push({
+    id: id,
+    tag,
+    name,
+    description,
+    groupId,
+    status,
+    remarks,
+    isDeleted: false,
+    owner: user.uid,
+    createdAt: date,
+    updatedAt: date,
+  })
+
+  return { success: { id } }
 }

@@ -1,4 +1,4 @@
-import { TaskBoard, TaskGroup } from '@/types'
+import { Task, TaskBoard, TaskGroup } from '@/types'
 
 import { create } from 'zustand'
 
@@ -7,10 +7,13 @@ export type ModalType =
   | 'update-task-board'
   | 'create-task-group'
   | 'update-task-group'
+  | 'create-task'
+  | 'update-task'
 
 interface ModalData {
   taskBoard?: TaskBoard
   taskGroup?: TaskGroup
+  tasks?: Task
 }
 
 interface ModalStore {

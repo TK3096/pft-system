@@ -124,7 +124,7 @@ export const UpdateTaskBoardModal = () => {
                         id='name'
                         type='text'
                         placeholder='Board name'
-                        className='boarder-none dark:bg-stone-900/50'
+                        className='border-none dark:bg-stone-900/50'
                         disabled={loading}
                         {...field}
                       />
@@ -148,9 +148,9 @@ export const UpdateTaskBoardModal = () => {
                     <FormControl>
                       <Textarea
                         id='description'
-                        rows={3}
+                        rows={5}
                         placeholder='Board description'
-                        className='boarder-none dark:bg-stone-900/50'
+                        className='border-none dark:bg-stone-900/50'
                         disabled={loading}
                         {...field}
                       />

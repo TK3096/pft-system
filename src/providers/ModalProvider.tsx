@@ -6,6 +6,7 @@ import { CreateTaskBoardModal } from '@/components/modals/CreateTaskBoardModal'
 import { UpdateTaskBoardModal } from '@/components/modals/UpdateTaskBoardModal'
 import { CreateTaskGroupModal } from '@/components/modals/CreateTaskGroupModal'
 import { UpdateTaskGroupModal } from '@/components/modals/UpdateTaskGroupModal'
+import { CreateTaskModal } from '@/components/modals/CreateTaskModal'
 
 export const ModalProvider = () => {
   const [mounted, setMounted] = useState(false)
@@ -22,6 +23,7 @@ export const ModalProvider = () => {
       <UpdateTaskBoardModal />
       <CreateTaskGroupModal />
       <UpdateTaskGroupModal />
+      <CreateTaskModal />
     </>
   )
 }
