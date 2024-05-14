@@ -25,6 +25,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
 
 interface TasksTableProps {
   data: Task[]
@@ -78,7 +79,7 @@ export const TasksTable: React.FC<TasksTableProps> = (
   return (
     <div>
       <Table>
-        <TableHeader>
+        <TableHeader className='dark:bg-neutral-900'>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
@@ -121,7 +122,11 @@ export const TasksTable: React.FC<TasksTableProps> = (
         </TableBody>
       </Table>
 
-      <div className='flex items-center justify-end space-x-2'>
+      <Separator />
+      <div className='flex items-center justify-end space-x-2 text-sm dark:bg-neutral-900'>
+        <div className='mr-auto pl-3 text-muted-foreground'>
+          Total <span className='text-white'>{data.length}</span> row(s)
+        </div>
         <Button
           variant='ghost'
           size='sm'

@@ -21,7 +21,7 @@ export const GroupContent: React.FC<GroupContentProps> = (
   const filteredTasks = tasks.filter((task) => task.groupId === groupId)
 
   return (
-    <div>
+    <div className='border-2 my-3 mx-2 border-zinc-800 rounded-lg overflow-hidden'>
       <TasksTable data={filteredTasks} columns={columns} />
     </div>
   )

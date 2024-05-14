@@ -55,7 +55,14 @@ export const ResizableLayout: React.FC<ResizableLayoutProps> = (
       {groupId && (
         <>
           <ResizableHandle withHandle />
-          <ResizablePanel id='task-group'>{groupSlot}</ResizablePanel>
+          <ResizablePanel
+            id='task-group'
+            defaultSize={50}
+            maxSize={60}
+            minSize={45}
+          >
+            {groupSlot}
+          </ResizablePanel>
         </>
       )}
       {groupId && taskId && (

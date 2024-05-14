@@ -23,7 +23,7 @@ const TaskBoardPage = ({
           <Separator />
           <GroupList boardId={boardId} />
           <Separator />
-          <div className='h-[55px] flex items-center p-3'>
+          <div className='h-[55px] flex justify-center items-center p-3'>
             <NewTaskGroupButton boardId={boardId} />
           </div>
         </>

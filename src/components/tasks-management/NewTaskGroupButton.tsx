@@ -41,7 +41,12 @@ export const NewTaskGroupButton: React.FC<NewTaskGroupButtonProps> = (
       )}
       {isCollapsed && (
         <ActionTooltip label='New group' align='center' side='right'>
-          <Button variant='ghost' size='icon' onClick={handleNewTaskGroup}>
+          <Button
+            variant='ghost'
+            size='icon'
+            className='w-full'
+            onClick={handleNewTaskGroup}
+          >
             <ArchiveIcon className='w-5 h-5' />
           </Button>
         </ActionTooltip>
