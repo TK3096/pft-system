@@ -1,5 +1,7 @@
 'use client'
 
+import React from 'react'
+
 import { Task, TaskStatus } from '@/types'
 
 import dayjs from 'dayjs'
@@ -7,6 +9,8 @@ import dayjs from 'dayjs'
 import { MoreVerticalIcon, EditIcon } from 'lucide-react'
 
 import { ColumnDef } from '@tanstack/react-table'
+
+import { useModal } from '@/hooks/useModal'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -19,7 +23,20 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Badge } from '@/components/ui/badge'
 
-import { cn } from '@/lib/utils'
+const EditTaskAction: React.FC<{ task: Task }> = ({ task }: { task: Task }) => {
+  const { onOpen } = useModal()
+
+  const handleClick = () => {
+    onOpen('update-task', { task })
+  }
+
+  return (
+    <div className='w-full flex items-center' onClick={handleClick}>
+      Edit
+      <EditIcon className='h-4 w-4 ml-auto' />
+    </div>
+  )
+}
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -106,15 +123,8 @@ export const columns: ColumnDef<Task>[] = [
           <DropdownMenuContent align='end'>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className='cursor-pointer'
-              onClick={(e) => {
-                e.stopPropagation()
-                console.log('qq')
-              }}
-            >
-              Edit
-              <EditIcon className='h-4 w-4 ml-auto' />
+            <DropdownMenuItem className='cursor-pointer'>
+              <EditTaskAction task={task} />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

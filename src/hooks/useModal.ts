@@ -13,7 +13,7 @@ export type ModalType =
 interface ModalData {
   taskBoard?: TaskBoard
   taskGroup?: TaskGroup
-  tasks?: Task
+  task?: Task
 }
 
 interface ModalStore {

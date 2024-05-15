@@ -7,15 +7,14 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import qs from 'query-string'
 
 import { X } from 'lucide-react'
 
 import { useModal } from '@/hooks/useModal'
 
-import { createTask } from '@/actions/tasks-management'
+import { updateTask } from '@/actions/tasks-management'
 
-import { CreateTaskSchema } from '@/schemas/tasks-management'
+import { UpdateTaskSchema } from '@/schemas/tasks-management'
 
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -45,10 +44,11 @@ import {
   SelectItem,
 } from '@/components/ui/select'
 import { ActionTooltip } from '@/components/common/ActionTooltip'
+import { Checkbox } from '@/components/ui/checkbox'
 
 import { TASK_STATUS } from '@/lib/constant'
 
-export const CreateTaskModal: React.FC = () => {
+export const UpdateTaskModal: React.FC = () => {
   const router = useRouter()
 
   const [isPending, startTransition] = useTransition()
@@ -59,7 +59,7 @@ export const CreateTaskModal: React.FC = () => {
   const { type, open, data, onClose } = useModal()
 
   const form = useForm({
-    resolver: zodResolver(CreateTaskSchema),
+    resolver: zodResolver(UpdateTaskSchema),
     defaultValues: {
       tag: '',
       name: '',
@@ -67,13 +67,14 @@ export const CreateTaskModal: React.FC = () => {
       groupId: '',
       status: TaskStatus.TODO,
       remarks: [] as string[],
+      isDeleted: false,
     },
   })
 
-  const isOpen = type === 'create-task' && open
+  const isOpen = type === 'update-task' && open
   const loading = isPending || form.formState.isSubmitting
   const isDirty = form.formState.isDirty
-  const boardId = data?.taskGroup?.boardId
+  const taskId = data?.task?.id
 
   const handleRemarkChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -98,25 +99,21 @@ export const CreateTaskModal: React.FC = () => {
     form.setValue('remarks', filter)
   }
 
-  const handleSubmitForm = (values: z.infer<typeof CreateTaskSchema>) => {
+  const handleSubmitForm = (values: z.infer<typeof UpdateTaskSchema>) => {
     setError('')
 
     try {
       startTransition(async () => {
-        const res = await createTask(values)
+        const res = await updateTask(taskId as string, values)
 
         if (res?.error) {
           setError(res.error)
         }
 
         if (res?.success) {
-          const url = qs.stringifyUrl({
-            url: '/tasks-management',
-            query: { b: boardId, g: values.groupId, t: res.success.id },
-          })
-
-          router.replace(url)
           handleClose()
+
+          router.refresh()
         }
       })
     } catch {
@@ -130,10 +127,18 @@ export const CreateTaskModal: React.FC = () => {
   }
 
   useEffect(() => {
-    if (data?.taskGroup) {
-      form.setValue('groupId', data.taskGroup.id)
+    if (data?.task) {
+      form.setValue('tag', data.task.tag)
+      form.setValue('name', data.task.name)
+      form.setValue('description', data.task.description)
+      form.setValue('groupId', data.task.groupId)
+      form.setValue('status', data.task.status)
+      form.setValue('remarks', data.task.remarks)
+      form.setValue('isDeleted', data.task.isDeleted)
+
+      setRemarkFields(data.task.remarks)
     }
-  }, [form, data?.taskGroup])
+  }, [form, data?.task])
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -315,6 +320,24 @@ export const CreateTaskModal: React.FC = () => {
                 </div>
               </FormItem>
 
+              <FormField
+                name='isDeleted'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className='flex items-end gap-2'>
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormLabel className='text-zinc-400'>
+                      <span>Delete this task</span>
+                    </FormLabel>
+                  </FormItem>
+                )}
+              ></FormField>
+
               {error && <FormError message={error} />}
             </div>
 
@@ -332,7 +355,7 @@ export const CreateTaskModal: React.FC = () => {
                 variant='primary'
                 disabled={!isDirty || loading}
               >
-                Create
+                Update
               </Button>
             </DialogFooter>
           </form>

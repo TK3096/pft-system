@@ -39,3 +39,18 @@ export const CreateTaskSchema = z.object({
   ]),
   remarks: z.array(z.string()),
 })
+
+export const UpdateTaskSchema = z.object({
+  tag: z.string().min(1, 'Tag is required'),
+  name: z.string().min(1, 'Name is required'),
+  description: z.string(),
+  groupId: z.string().min(1, 'Group ID is required'),
+  status: z.enum([
+    TaskStatus.TODO,
+    TaskStatus.IN_PROGRESS,
+    TaskStatus.DONE,
+    TaskStatus.TESTING,
+  ]),
+  remarks: z.array(z.string()),
+  isDeleted: z.boolean().default(false),
+})

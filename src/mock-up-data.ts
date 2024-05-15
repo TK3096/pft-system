@@ -113,7 +113,7 @@ export const tasks: Task[] = [
     isDeleted: false,
     status: TaskStatus.DONE,
     owner: 'user1',
-    remarks: [],
+    remarks: ['remark 1', 'remark 2', 'remark 3'],
     createdAt: dayjs().toString(),
     updatedAt: dayjs().toString(),
   },
