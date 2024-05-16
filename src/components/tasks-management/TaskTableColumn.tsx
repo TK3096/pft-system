@@ -11,6 +11,7 @@ import { MoreVerticalIcon, EditIcon } from 'lucide-react'
 import { ColumnDef } from '@tanstack/react-table'
 
 import { useModal } from '@/hooks/useModal'
+import { useTasksManagement } from '@/hooks/useTasksManagement'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -25,9 +26,10 @@ import { Badge } from '@/components/ui/badge'
 
 const EditTaskAction: React.FC<{ task: Task }> = ({ task }: { task: Task }) => {
   const { onOpen } = useModal()
+  const { taskGroups, taskBoards } = useTasksManagement()
 
   const handleClick = () => {
-    onOpen('update-task', { task })
+    onOpen('update-task', { task, taskGroups, taskBoards })
   }
 
   return (

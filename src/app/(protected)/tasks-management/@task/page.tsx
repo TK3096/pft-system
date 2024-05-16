@@ -1,7 +1,13 @@
-const TaskPage = () => {
+import { TaskDetailHeader } from '@/components/tasks-management/TaskDetailHeader'
+import { Separator } from '@/components/ui/separator'
+
+const TaskPage = ({ searchParams }: { [key: string]: { t: string } }) => {
+  const taskId = searchParams?.t || ''
+
   return (
-    <div>
-      <h1>TaskPage</h1>
+    <div className='h-full'>
+      <TaskDetailHeader taskId={taskId} />
+      <Separator />
     </div>
   )
 }

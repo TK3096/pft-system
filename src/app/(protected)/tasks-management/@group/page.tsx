@@ -5,10 +5,9 @@ import { Separator } from '@/components/ui/separator'
 const TaskGroupPage = ({
   searchParams,
 }: {
-  [key: string]: { g: string; b: string } | undefined
+  [key: string]: { g: string } | undefined
 }) => {
   const groupId = searchParams?.g || ''
-  const boardId = searchParams?.b || ''
 
   return (
     <div className='h-full'>

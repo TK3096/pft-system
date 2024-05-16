@@ -14,6 +14,8 @@ interface ModalData {
   taskBoard?: TaskBoard
   taskGroup?: TaskGroup
   task?: Task
+  taskBoards?: TaskBoard[]
+  taskGroups?: TaskGroup[]
 }
 
 interface ModalStore {

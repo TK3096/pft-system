@@ -1,8 +1,8 @@
 'use client'
 
-import { TaskStatus } from '@/types'
+import { TaskGroup, TaskStatus } from '@/types'
 
-import React, { useState, useEffect, useTransition } from 'react'
+import React, { useState, useEffect, useTransition, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -42,6 +42,8 @@ import {
   SelectTrigger,
   SelectValue,
   SelectItem,
+  SelectGroup,
+  SelectLabel,
 } from '@/components/ui/select'
 import { ActionTooltip } from '@/components/common/ActionTooltip'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -75,6 +77,26 @@ export const UpdateTaskModal: React.FC = () => {
   const loading = isPending || form.formState.isSubmitting
   const isDirty = form.formState.isDirty
   const taskId = data?.task?.id
+  const tasksBoards = data?.taskBoards || []
+
+  const groupOptions = useMemo(() => {
+    if (!data?.taskGroups) {
+      return null
+    }
+
+    return data.taskGroups.reduce(
+      (acc: { [key: string]: TaskGroup[] }, cur: TaskGroup) => {
+        if (acc[cur.boardId]) {
+          acc[cur.boardId].push(cur)
+        } else {
+          acc[cur.boardId] = [cur]
+        }
+
+        return acc
+      },
+      {},
+    )
+  }, [data?.taskGroups])
 
   const handleRemarkChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -136,7 +158,7 @@ export const UpdateTaskModal: React.FC = () => {
       form.setValue('remarks', data.task.remarks)
       form.setValue('isDeleted', data.task.isDeleted)
 
-      setRemarkFields(data.task.remarks)
+      setRemarkFields(data.task.remarks.length > 0 ? data.task.remarks : [''])
     }
   }, [form, data?.task])
 
@@ -157,17 +179,49 @@ export const UpdateTaskModal: React.FC = () => {
             onSubmit={form.handleSubmit(handleSubmitForm)}
           >
             <div className='space-y-2 px-6'>
-              <div className='space-y-2'>
-                <FormLabel className='uppercase text-sm font-bold dark:text-zinc-200'>
-                  Group
-                </FormLabel>
-                <Input
-                  type='text'
-                  className='border-none dark:bg-stone-900/50'
-                  defaultValue={data?.taskGroup?.name || ''}
-                  disabled
-                />
-              </div>
+              <FormField
+                name='groupId'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel
+                      htmlFor='groupId'
+                      className='uppercase text-sm font-bold dark:text-zinc-200'
+                    >
+                      Group
+                    </FormLabel>
+                    <Select
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <FormControl>
+                        <SelectTrigger className='border-none dark:bg-stone-900/50'>
+                          <SelectValue placeholder='Select task group' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {tasksBoards.map((board) => (
+                          <SelectGroup key={board.id}>
+                            <SelectLabel className='dark:bg-zinc-900 font-bold'>
+                              #
+                              <span className='ml-1 text-[0.75rem]'>
+                                {board.name}
+                              </span>
+                            </SelectLabel>
+                            {groupOptions &&
+                              groupOptions[board.id] &&
+                              groupOptions[board.id].map((group) => (
+                                <SelectItem key={group.id} value={group.id}>
+                                  {group.name}
+                                </SelectItem>
+                              ))}
+                          </SelectGroup>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
 
               <div className='grid grid-cols-[1fr_20%] gap-3'>
                 <FormField
