@@ -1,61 +1,56 @@
+import { TaskStatus } from '@/types'
+
 import * as z from 'zod'
 
-import { TaskState } from '@/types'
-
-export const CreateWorkspaceSchema = z.object({
+export const CreateTaskBoardSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  description: z.string().optional(),
+  description: z.string(),
 })
 
-export const EditWorkspaceSchema = z.object({
-  id: z.string(),
+export const UpdateTaskBoardSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  description: z.string().optional(),
-  status: z.enum(['active', 'inactive']).default('active'),
+  description: z.string(),
+  isDeleted: z.boolean().default(false),
 })
 
-export const CreateBoardSchema = z.object({
+export const CreateTaskGroupSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  description: z.string().optional(),
-  workspaceId: z.string().min(1, 'Workspace id is required'),
+  boardId: z.string().min(1, 'Board ID is required'),
+  description: z.string(),
 })
 
-export const EditBoardSchema = z.object({
-  id: z.string(),
+export const UpdateTaskGroupSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  description: z.string().optional(),
-  workspaceId: z.string().min(1, 'Workspace id is required'),
-  status: z.enum(['active', 'inactive']).default('active'),
+  boardId: z.string().min(1, 'Board ID is required'),
+  description: z.string(),
+  isDeleted: z.boolean().default(false),
 })
 
 export const CreateTaskSchema = z.object({
+  tag: z.string().min(1, 'Tag is required'),
   name: z.string().min(1, 'Name is required'),
-  description: z.string().min(1, 'Description is required'),
-  boardId: z.string().min(1, 'Board id is required'),
-  state: z
-    .enum([
-      TaskState.TODO,
-      TaskState.IN_PROGRESS,
-      TaskState.REVIEW,
-      TaskState.DONE,
-    ])
-    .default(TaskState.TODO),
-  remarks: z.array(z.string()).optional(),
+  description: z.string(),
+  groupId: z.string().min(1, 'Group ID is required'),
+  status: z.enum([
+    TaskStatus.TODO,
+    TaskStatus.IN_PROGRESS,
+    TaskStatus.DONE,
+    TaskStatus.TESTING,
+  ]),
+  remarks: z.array(z.string()),
 })
 
-export const EditTaskSchema = z.object({
-  id: z.string(),
+export const UpdateTaskSchema = z.object({
+  tag: z.string().min(1, 'Tag is required'),
   name: z.string().min(1, 'Name is required'),
-  description: z.string().min(1, 'Description is required'),
-  boardId: z.string().min(1, 'Board id is required'),
-  state: z
-    .enum([
-      TaskState.TODO,
-      TaskState.IN_PROGRESS,
-      TaskState.REVIEW,
-      TaskState.DONE,
-    ])
-    .default(TaskState.TODO),
-  status: z.enum(['active', 'inactive']).default('active'),
-  remarks: z.array(z.string()).optional(),
+  description: z.string(),
+  groupId: z.string().min(1, 'Group ID is required'),
+  status: z.enum([
+    TaskStatus.TODO,
+    TaskStatus.IN_PROGRESS,
+    TaskStatus.DONE,
+    TaskStatus.TESTING,
+  ]),
+  remarks: z.array(z.string()),
+  isDeleted: z.boolean().default(false),
 })

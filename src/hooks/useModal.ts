@@ -1,19 +1,21 @@
-import { Board, Task, Workspace } from '@/types'
+import { Task, TaskBoard, TaskGroup } from '@/types'
 
 import { create } from 'zustand'
 
 export type ModalType =
-  | 'createWorkspace'
-  | 'editWorkspace'
-  | 'createBoard'
-  | 'editBoard'
-  | 'createTask'
-  | 'editTask'
+  | 'create-task-board'
+  | 'update-task-board'
+  | 'create-task-group'
+  | 'update-task-group'
+  | 'create-task'
+  | 'update-task'
 
 interface ModalData {
-  workspace?: Workspace
-  board?: Board
+  taskBoard?: TaskBoard
+  taskGroup?: TaskGroup
   task?: Task
+  taskBoards?: TaskBoard[]
+  taskGroups?: TaskGroup[]
 }
 
 interface ModalStore {
@@ -26,7 +28,8 @@ interface ModalStore {
 
 export const useModal = create<ModalStore>((set) => ({
   type: null,
+  data: undefined,
   open: false,
   onOpen: (type, data) => set({ type, open: true, data }),
-  onClose: () => set({ open: false }),
+  onClose: () => set({ open: false, type: null, data: undefined }),
 }))

@@ -1,18 +1,35 @@
-import { Sidebar } from '@/components/tasks-management/navigation/Sidebar'
+import { Metadata } from 'next'
 
-const TasksManagementLayout = ({ children }: { children: React.ReactNode }) => {
+import { ResizableLayout } from '@/components/tasks-management/ResizableLayout'
+
+import { TasksManagementProvider } from '@/providers/TasksManagementProvider'
+import { Suspense } from 'react'
+
+export const metadata: Metadata = {
+  title: 'PFT System | Tasks Management',
+}
+
+const TasksManagementLayout = ({
+  board,
+  group,
+  task,
+}: {
+  board: React.ReactNode
+  group: React.ReactNode
+  task: React.ReactNode
+}) => {
   return (
-    <div className='h-full'>
-      <div className='fixed inset-y-0 z-40 h-full w-[180px]'>
-        <Sidebar
-          type='workspace'
-          headerLabel='Tasks Management'
-          headerHref='/tasks-management'
-          addButtonLabel='new workspace'
-        />
-      </div>
-      <main className='pl-[180px] h-full'>{children}</main>
-    </div>
+    <TasksManagementProvider>
+      <Suspense>
+        <div className='h-full'>
+          <ResizableLayout
+            boardSlot={board}
+            groupSlot={group}
+            taskSlot={task}
+          />
+        </div>
+      </Suspense>
+    </TasksManagementProvider>
   )
 }
 

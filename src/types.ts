@@ -4,49 +4,6 @@ export type ApiResponse<T = object> =
   | { status: true; data: T }
   | { status: false; error: string }
 
-export type TasksManageStatus = 'active' | 'inactive'
-
-export interface Workspace {
-  id: string
-  name: string
-  description: string
-  status: 'active' | 'inactive'
-  owner: string
-  createdAt: number
-  updatedAt: number
-}
-
-export interface Board {
-  id: string
-  name: string
-  description: string
-  workspaceId: string
-  status: 'active' | 'inactive'
-  owner: string
-  createdAt: number
-  updatedAt: number
-}
-
-export interface Task {
-  id: string
-  name: string
-  description: string
-  boardId: string
-  status: 'active' | 'inactive'
-  state: TaskState
-  owner: string
-  remarks: string[]
-  createdAt: number
-  updatedAt: number
-}
-
-export enum TaskState {
-  TODO = 'todo',
-  IN_PROGRESS = 'in-progress',
-  REVIEW = 'review',
-  DONE = 'done',
-}
-
 export enum PortfolioRank {
   COMMON = 'common',
   RARE = 'rare',
@@ -62,4 +19,46 @@ export interface Portfolio {
   src: string
   demo?: string
   createdAt: number
+}
+
+export interface TaskBoard {
+  id: string
+  name: string
+  description: string
+  isDeleted: boolean
+  owner: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface TaskGroup {
+  id: string
+  boardId: string
+  name: string
+  description: string
+  owner: string
+  isDeleted: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export enum TaskStatus {
+  TODO = 'todo',
+  IN_PROGRESS = 'in_progress',
+  TESTING = 'testing',
+  DONE = 'done',
+}
+
+export interface Task {
+  id: string
+  groupId: string
+  tag: string
+  name: string
+  description: string
+  isDeleted: boolean
+  status: TaskStatus
+  owner: string
+  remarks: string[]
+  createdAt: string
+  updatedAt: string
 }

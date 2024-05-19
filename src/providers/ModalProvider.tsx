@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react'
 
-import { CreateWorkspaceModal } from '@/components/tasks-management/CreateWorkspaceModal'
-import { EditWorkspaceModal } from '@/components/tasks-management/EditWorkspaceModal'
-import { CreateBoardModal } from '@/components/tasks-management/CreateBoardModal'
-import { EditBoardModal } from '@/components/tasks-management/EditBoardModal'
-import { CreateTaskModal } from '@/components/tasks-management/CreateTaskModal'
-import { EditTaskModal } from '@/components/tasks-management/EditTaskModal'
+import { CreateTaskBoardModal } from '@/components/modals/CreateTaskBoardModal'
+import { UpdateTaskBoardModal } from '@/components/modals/UpdateTaskBoardModal'
+import { CreateTaskGroupModal } from '@/components/modals/CreateTaskGroupModal'
+import { UpdateTaskGroupModal } from '@/components/modals/UpdateTaskGroupModal'
+import { CreateTaskModal } from '@/components/modals/CreateTaskModal'
+import { UpdateTaskModal } from '@/components/modals/UpdateTaskModal'
 
 export const ModalProvider = () => {
   const [mounted, setMounted] = useState(false)
@@ -20,12 +20,12 @@ export const ModalProvider = () => {
 
   return (
     <>
-      <CreateWorkspaceModal />
-      <EditWorkspaceModal />
-      <CreateBoardModal />
-      <EditBoardModal />
+      <CreateTaskBoardModal />
+      <UpdateTaskBoardModal />
+      <CreateTaskGroupModal />
+      <UpdateTaskGroupModal />
       <CreateTaskModal />
-      <EditTaskModal />
+      <UpdateTaskModal />
     </>
   )
 }
