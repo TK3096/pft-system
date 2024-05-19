@@ -66,6 +66,7 @@ export const UpdateTaskModal: React.FC = () => {
       tag: '',
       name: '',
       description: '',
+      boardId: '',
       groupId: '',
       status: TaskStatus.TODO,
       remarks: [] as string[],
@@ -121,6 +122,23 @@ export const UpdateTaskModal: React.FC = () => {
     form.setValue('remarks', filter)
   }
 
+  const handleChangeGroup = (
+    value: string,
+    onChange: (...event: any[]) => void,
+  ) => {
+    const boardId = data?.taskGroups?.find(
+      (group) => group.id === value,
+    )?.boardId
+
+    if (boardId) {
+      onChange(value)
+      form.setValue('boardId', boardId)
+    } else {
+      form.setValue('groupId', '')
+      form.setValue('boardId', '')
+    }
+  }
+
   const handleSubmitForm = (values: z.infer<typeof UpdateTaskSchema>) => {
     setError('')
 
@@ -153,6 +171,7 @@ export const UpdateTaskModal: React.FC = () => {
       form.setValue('tag', data.task.tag)
       form.setValue('name', data.task.name)
       form.setValue('description', data.task.description)
+      form.setValue('boardId', data.task.boardId)
       form.setValue('groupId', data.task.groupId)
       form.setValue('status', data.task.status)
       form.setValue('remarks', data.task.remarks)
@@ -192,7 +211,9 @@ export const UpdateTaskModal: React.FC = () => {
                     </FormLabel>
                     <Select
                       defaultValue={field.value}
-                      onValueChange={field.onChange}
+                      onValueChange={(value) =>
+                        handleChangeGroup(value, field.onChange)
+                      }
                     >
                       <FormControl>
                         <SelectTrigger className='border-none dark:bg-stone-900/50'>

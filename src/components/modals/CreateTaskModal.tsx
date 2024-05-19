@@ -64,6 +64,7 @@ export const CreateTaskModal: React.FC = () => {
       tag: '',
       name: '',
       description: '',
+      boardId: '',
       groupId: '',
       status: TaskStatus.TODO,
       remarks: [] as string[],
@@ -131,6 +132,7 @@ export const CreateTaskModal: React.FC = () => {
 
   useEffect(() => {
     if (data?.taskGroup) {
+      form.setValue('boardId', data.taskGroup.boardId)
       form.setValue('groupId', data.taskGroup.id)
     }
   }, [form, data?.taskGroup])

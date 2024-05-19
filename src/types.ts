@@ -51,6 +51,7 @@ export enum TaskStatus {
 
 export interface Task {
   id: string
+  boardId: string
   groupId: string
   tag: string
   name: string
