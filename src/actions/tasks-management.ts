@@ -11,10 +11,14 @@ import {
   UpdateTaskSchema,
 } from '@/schemas/tasks-management'
 
+import { add, update } from '@/lib/firebase-sdk/db'
 import { getCurrentUser } from '@/lib/firebase-sdk/auth'
 import { getCurrentDate } from '@/lib/utils'
-
-import { taskBoards, taskGroups, tasks } from '@/mock-up-data'
+import {
+  TASK_BOARDS_COLLECTION,
+  TASK_GROUPS_COLLECTION,
+  TASKS_COLLECTION,
+} from '@/lib/constant'
 
 export const createTaskBoard = async (
   values: z.infer<typeof CreateTaskBoardSchema>,
@@ -34,9 +38,7 @@ export const createTaskBoard = async (
   const { name, description } = validatedFields.data
   const date = getCurrentDate()
 
-  const id = crypto.randomUUID()
-  taskBoards.push({
-    id: id,
+  const id = await add(TASK_BOARDS_COLLECTION, {
     name,
     description,
     isDeleted: false,
@@ -44,6 +46,10 @@ export const createTaskBoard = async (
     createdAt: date,
     updatedAt: date,
   })
+
+  if (!id) {
+    return { error: 'Failed to create task board' }
+  }
 
   return { success: { id } }
 }
@@ -67,6 +73,17 @@ export const updateTaskBoard = async (
   const { name, description, isDeleted } = validatedFields.data
   const date = getCurrentDate()
 
+  const updated = await update(TASK_BOARDS_COLLECTION, id, {
+    name,
+    description,
+    isDeleted,
+    updatedAt: date,
+  })
+
+  if (!updated) {
+    return { error: 'Failed to update task board' }
+  }
+
   return { success: true }
 }
 
@@ -88,17 +105,19 @@ export const createTaskGroup = async (
   const { name, boardId, description } = validatedFields.data
   const date = getCurrentDate()
 
-  const id = crypto.randomUUID()
-  taskGroups.push({
-    id: id,
+  const id = await add(TASK_GROUPS_COLLECTION, {
     name,
-    description,
     boardId,
+    description,
     isDeleted: false,
     owner: user.uid,
     createdAt: date,
     updatedAt: date,
   })
+
+  if (!id) {
+    return { error: 'Failed to create task group' }
+  }
 
   return { success: { id } }
 }
@@ -122,6 +141,18 @@ export const updateTaskGroup = async (
   const { name, description, isDeleted, boardId } = validatedFields.data
   const date = getCurrentDate()
 
+  const updated = await update(TASK_GROUPS_COLLECTION, id, {
+    name,
+    description,
+    isDeleted,
+    boardId,
+    updatedAt: date,
+  })
+
+  if (!updated) {
+    return { error: 'Failed to update task group' }
+  }
+
   return { success: true }
 }
 
@@ -142,20 +173,22 @@ export const createTask = async (values: z.infer<typeof CreateTaskSchema>) => {
     validatedFields.data
   const date = getCurrentDate()
 
-  const id = crypto.randomUUID()
-  tasks.push({
-    id: id,
-    tag,
+  const id = await add(TASKS_COLLECTION, {
+    groupId,
     name,
     description,
-    groupId,
     status,
     remarks,
+    tag,
     isDeleted: false,
     owner: user.uid,
     createdAt: date,
     updatedAt: date,
   })
+
+  if (!id) {
+    return { error: 'Failed to create task' }
+  }
 
   return { success: { id } }
 }
@@ -179,6 +212,21 @@ export const updateTask = async (
   const { groupId, name, description, status, remarks, tag, isDeleted } =
     validatedFields.data
   const date = getCurrentDate()
+
+  const updated = await update(TASKS_COLLECTION, id, {
+    groupId,
+    name,
+    description,
+    status,
+    remarks,
+    tag,
+    isDeleted,
+    updatedAt: date,
+  })
+
+  if (!updated) {
+    return { error: 'Failed to update task' }
+  }
 
   return { success: true }
 }

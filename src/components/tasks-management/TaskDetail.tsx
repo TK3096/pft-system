@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState } from 'react'
-import dayjs from 'dayjs'
 
 import { CopyIcon, CheckIcon } from 'lucide-react'
 

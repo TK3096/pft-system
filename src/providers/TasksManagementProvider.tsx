@@ -42,17 +42,25 @@ export const TasksManagementProvider = ({
   const [tasks, setTasks] = useState<Task[]>([])
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
 
-  const sortedTaskBoards = useMemo(() => {
-    return taskBoards.sort(
+  const sortedAndFilterTaskBoards = useMemo(() => {
+    const filter = taskBoards.filter((b) => !b.isDeleted)
+
+    return filter.sort(
       (a, b) => dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix(),
     )
   }, [taskBoards])
 
-  const sortedTaskGroups = useMemo(() => {
-    return taskGroups.sort(
+  const sortedAndFilterTaskGroups = useMemo(() => {
+    const filter = taskGroups.filter((b) => !b.isDeleted)
+
+    return filter.sort(
       (a, b) => dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix(),
     )
   }, [taskGroups])
+
+  const filterTasks = useMemo(() => {
+    return tasks.filter((b) => !b.isDeleted)
+  }, [tasks])
 
   useEffect(() => {
     const unsubscribeTaskBoards = getDocuments(
@@ -175,9 +183,9 @@ export const TasksManagementProvider = ({
   }, [])
 
   const value = {
-    taskBoards: sortedTaskBoards,
-    taskGroups: sortedTaskGroups,
-    tasks,
+    taskBoards: sortedAndFilterTaskBoards,
+    taskGroups: sortedAndFilterTaskGroups,
+    tasks: filterTasks,
     isCollapsed,
     onCollapsed: setIsCollapsed,
   }
