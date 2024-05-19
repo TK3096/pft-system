@@ -125,7 +125,7 @@ export const TasksTable: React.FC<TasksTableProps> = (
       <Separator />
       <div className='flex items-center justify-end space-x-2 text-sm dark:bg-neutral-900'>
         <div className='mr-auto pl-3 text-muted-foreground'>
-          Total <span className='text-white'>{data.length}</span> row(s)
+          Total <span className='text-white'>{data.length}</span> task(s)
         </div>
         <Button
           variant='ghost'
@@ -137,7 +137,10 @@ export const TasksTable: React.FC<TasksTableProps> = (
           Previous
         </Button>
         <div>
-          {table.getState().pagination.pageIndex + 1} / {table.getPageCount()}
+          {table.getPageCount() > 0
+            ? table.getState().pagination.pageIndex + 1
+            : 0}
+          / {table.getPageCount()}
         </div>
         <Button
           variant='ghost'

@@ -20,7 +20,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Badge } from '@/components/ui/badge'
+import { TaskStatusBadge } from '@/components/tasks-management/TaskStatusBadge'
+import { TaskTagBadge } from '@/components/tasks-management/TaskTagBadge'
 
 import { formatDate } from '@/lib/utils'
 
@@ -46,25 +47,8 @@ export const columns: ColumnDef<Task>[] = [
     header: 'Tag',
     cell: ({ row }) => {
       const task = row.original
-      let badgeVariant: 'default' | 'destructive' | 'outline' = 'default'
 
-      switch (task.tag) {
-        case 'Bug':
-          badgeVariant = 'destructive'
-          break
-        case 'Feature':
-          badgeVariant = 'outline'
-          break
-        default:
-          badgeVariant = 'default'
-          break
-      }
-
-      if (!task.tag) {
-        return <div>-</div>
-      }
-
-      return <Badge variant={badgeVariant}>{task.tag}</Badge>
+      return <TaskTagBadge tag={task.tag} />
     },
   },
   {
@@ -76,28 +60,8 @@ export const columns: ColumnDef<Task>[] = [
     header: 'Status',
     cell: ({ row }) => {
       const task = row.original
-      let badgeVariant: 'default' | 'success' | 'warning' | 'info' = 'default'
 
-      switch (task.status) {
-        case TaskStatus.DONE:
-          badgeVariant = 'success'
-          break
-        case TaskStatus.IN_PROGRESS:
-          badgeVariant = 'warning'
-          break
-        case TaskStatus.TESTING:
-          badgeVariant = 'info'
-          break
-        default:
-          badgeVariant = 'default'
-          break
-      }
-
-      return (
-        <Badge variant={badgeVariant} className='font-bold' size='square'>
-          {task.status.toUpperCase()}
-        </Badge>
-      )
+      return <TaskStatusBadge status={task.status} />
     },
   },
   {
