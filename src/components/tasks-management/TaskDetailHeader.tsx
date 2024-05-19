@@ -2,9 +2,10 @@
 
 import React from 'react'
 
-import { MoreVerticalIcon, NotepadTextIcon } from 'lucide-react'
+import { MoreVerticalIcon, EditIcon, DeleteIcon } from 'lucide-react'
 
 import { useTasksManagement } from '@/hooks/useTasksManagement'
+import { useModal } from '@/hooks/useModal'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -12,10 +13,9 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu'
+
+import { TASK_STATUS } from '@/lib/constant'
 
 interface TaskDetailHeaderProps {
   taskId: string
@@ -26,9 +26,19 @@ export const TaskDetailHeader: React.FC<TaskDetailHeaderProps> = (
 ) => {
   const { taskId } = props
 
-  const { tasks } = useTasksManagement()
+  const { tasks, taskBoards, taskGroups } = useTasksManagement()
+  const { onOpen } = useModal()
 
   const task = tasks.find((task) => task.id === taskId)
+
+  const handleEdit = () => {
+    if (task && taskBoards) {
+      console.log(taskBoards)
+      onOpen('update-task', { task, taskBoards, taskGroups })
+    }
+  }
+
+  const handleDelete = () => {}
 
   return (
     <div className='h-[52px] flex items-center justify-between gap-3 px-3 py-2'>
@@ -40,20 +50,26 @@ export const TaskDetailHeader: React.FC<TaskDetailHeaderProps> = (
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem className='pl-4'>Edit</DropdownMenuItem>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <DropdownMenuItem>
-                {/* <NotepadTextIcon /> */}
-                Status
-              </DropdownMenuItem>
-            </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
-              <DropdownMenuItem>Open</DropdownMenuItem>
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
-          <DropdownMenuItem>Group</DropdownMenuItem>
-          <DropdownMenuItem>Delete</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={handleEdit}
+            asChild
+            className='cursor-pointer'
+          >
+            <div className='flex gap-2 items-center justify-between w-full'>
+              Edit
+              <EditIcon className='w-4 h-4' />
+            </div>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            asChild
+            className='cursor-pointer'
+            onClick={handleDelete}
+          >
+            <div className='flex items-center gap-2 justify-between w-full'>
+              Delete
+              <DeleteIcon className='w-4 h-4' />
+            </div>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

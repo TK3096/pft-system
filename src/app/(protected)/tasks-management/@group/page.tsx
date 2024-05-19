@@ -13,7 +13,9 @@ const TaskGroupPage = ({
     <div className='h-full'>
       <GroupHeader groupId={groupId} />
       <Separator />
-      <GroupContent groupId={groupId} />
+      <div className='h-full overflow-scroll'>
+        <GroupContent groupId={groupId} />
+      </div>
     </div>
   )
 }

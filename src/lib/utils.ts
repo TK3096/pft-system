@@ -9,3 +9,7 @@ export const cn = (...inputs: ClassValue[]) => {
 export const getCurrentDate = () => {
   return dayjs().format()
 }
+
+export const formatDate = (value: string, pattern = 'YYYY-MM-DD HH:MM:ss') => {
+  return dayjs(value).format(pattern)
+}

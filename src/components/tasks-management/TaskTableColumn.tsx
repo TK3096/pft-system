@@ -4,8 +4,6 @@ import React from 'react'
 
 import { Task, TaskStatus } from '@/types'
 
-import dayjs from 'dayjs'
-
 import { MoreVerticalIcon, EditIcon } from 'lucide-react'
 
 import { ColumnDef } from '@tanstack/react-table'
@@ -23,6 +21,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Badge } from '@/components/ui/badge'
+
+import { formatDate } from '@/lib/utils'
 
 const EditTaskAction: React.FC<{ task: Task }> = ({ task }: { task: Task }) => {
   const { onOpen } = useModal()
@@ -106,7 +106,7 @@ export const columns: ColumnDef<Task>[] = [
     cell: ({ row }) => {
       const task = row.original
 
-      return <div>{dayjs(task.createdAt).format('YYYY-MM-DD HH:MM:ss')}</div>
+      return <div>{formatDate(task.createdAt)}</div>
     },
   },
   {
