@@ -42,7 +42,9 @@ export const TaskDetailHeader: React.FC<TaskDetailHeaderProps> = (
 
   return (
     <div className='h-[52px] flex items-center justify-between gap-3 px-3 py-2'>
-      <h1 className='text-lg font-bold'>{task ? task.name : ''}</h1>
+      <h1 className='text-lg font-bold w-[80vw] text-nowrap overflow-scroll no-scrollbar'>
+        {task ? task.name : ''}
+      </h1>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant='ghost' className='p-0 w-8 h-8'>

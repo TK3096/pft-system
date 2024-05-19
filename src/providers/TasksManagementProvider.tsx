@@ -2,13 +2,16 @@
 
 import { TaskBoard, TaskGroup, Task } from '@/types'
 
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useState, useMemo } from 'react'
+import dayjs from 'dayjs'
+
+import { getDocuments } from '@/lib/firebase/db'
 
 import {
-  taskBoards as taskBoardsData,
-  taskGroups as taskGroupsData,
-  tasks as tasksData,
-} from '@/mock-up-data'
+  TASKS_COLLECTION,
+  TASK_BOARDS_COLLECTION,
+  TASK_GROUPS_COLLECTION,
+} from '@/lib/constant'
 
 interface TasksManagementContext {
   taskBoards: TaskBoard[]
@@ -36,18 +39,144 @@ export const TasksManagementProvider = ({
 }) => {
   const [taskBoards, setTaskBoards] = useState<TaskBoard[]>([])
   const [taskGroups, setTaskGroups] = useState<TaskGroup[]>([])
-  const [tasks, setTaskss] = useState<Task[]>([])
+  const [tasks, setTasks] = useState<Task[]>([])
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
 
+  const sortedTaskBoards = useMemo(() => {
+    return taskBoards.sort(
+      (a, b) => dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix(),
+    )
+  }, [taskBoards])
+
+  const sortedTaskGroups = useMemo(() => {
+    return taskGroups.sort(
+      (a, b) => dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix(),
+    )
+  }, [taskGroups])
+
   useEffect(() => {
-    setTaskBoards(taskBoardsData)
-    setTaskGroups(taskGroupsData)
-    setTaskss(tasksData)
+    const unsubscribeTaskBoards = getDocuments(
+      TASK_BOARDS_COLLECTION,
+      (doc) => {
+        const { name, description, isDeleted, owner, createdAt, updatedAt } =
+          doc.data()
+
+        setTaskBoards((prev) => {
+          const index = prev.findIndex((w) => w.id === doc.id)
+
+          const newData: TaskBoard = {
+            id: doc.id,
+            name,
+            description,
+            isDeleted,
+            owner,
+            createdAt,
+            updatedAt,
+          }
+
+          if (index !== -1) {
+            const temp = [...prev]
+            temp[index] = newData
+
+            return temp
+          }
+
+          return [...prev, newData]
+        })
+      },
+    )
+
+    const unsubscribeTaskGroups = getDocuments(
+      TASK_GROUPS_COLLECTION,
+      (doc) => {
+        const {
+          name,
+          description,
+          isDeleted,
+          boardId,
+          owner,
+          createdAt,
+          updatedAt,
+        } = doc.data()
+
+        setTaskGroups((prev) => {
+          const index = prev.findIndex((b) => b.id === doc.id)
+
+          const newData: TaskGroup = {
+            id: doc.id,
+            name,
+            description,
+            isDeleted,
+            boardId,
+            owner,
+            createdAt,
+            updatedAt,
+          }
+
+          if (index !== -1) {
+            const temp = [...prev]
+            temp[index] = newData
+
+            return temp
+          }
+
+          return [...prev, newData]
+        })
+      },
+    )
+
+    const unsubscribeTasks = getDocuments(TASKS_COLLECTION, (doc) => {
+      const {
+        name,
+        tag,
+        description,
+        status,
+        isDeleted,
+        groupId,
+        owner,
+        remarks,
+        createdAt,
+        updatedAt,
+      } = doc.data()
+
+      setTasks((prev) => {
+        const index = prev.findIndex((b) => b.id === doc.id)
+
+        const newData: Task = {
+          id: doc.id,
+          name,
+          tag,
+          description,
+          status,
+          groupId,
+          isDeleted,
+          remarks,
+          owner,
+          createdAt,
+          updatedAt,
+        }
+
+        if (index !== -1) {
+          const temp = [...prev]
+          temp[index] = newData
+
+          return temp
+        }
+
+        return [...prev, newData]
+      })
+    })
+
+    return () => {
+      unsubscribeTaskBoards()
+      unsubscribeTaskGroups()
+      unsubscribeTasks()
+    }
   }, [])
 
   const value = {
-    taskBoards,
-    taskGroups,
+    taskBoards: sortedTaskBoards,
+    taskGroups: sortedTaskGroups,
     tasks,
     isCollapsed,
     onCollapsed: setIsCollapsed,

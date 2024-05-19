@@ -59,6 +59,9 @@ export const TaskDetail: React.FC<TaskDetailProps> = (
       <h3 className='font-bold text-lg'>Remark</h3>
       <Separator />
       <ul className='px-2 py-3 flex flex-col gap-2'>
+        {task.remarks.length === 0 && (
+          <p className='text-center text-sm text-muted-foreground'>No remark</p>
+        )}
         {task.remarks.map((remark) => (
           <li
             key={remark}

@@ -37,7 +37,10 @@ export const BoardDetail: React.FC<BoardDetailProps> = (
   return (
     <div className='flex justify-between gap-2 px-3 py-4'>
       <p
-        className={cn('text-muted-foreground text-sm', isCollapsed && 'hidden')}
+        className={cn(
+          'text-muted-foreground text-sm text-nowrap overflow-scroll w-[80vw] no-scrollbar',
+          isCollapsed && 'hidden',
+        )}
       >
         {board.description}
       </p>

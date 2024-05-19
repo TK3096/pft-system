@@ -60,6 +60,10 @@ export const columns: ColumnDef<Task>[] = [
           break
       }
 
+      if (!task.tag) {
+        return <div>-</div>
+      }
+
       return <Badge variant={badgeVariant}>{task.tag}</Badge>
     },
   },
