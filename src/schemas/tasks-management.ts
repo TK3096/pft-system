@@ -30,6 +30,7 @@ export const CreateTaskSchema = z.object({
   tag: z.string().min(1, 'Tag is required'),
   name: z.string().min(1, 'Name is required'),
   description: z.string(),
+  boardId: z.string().min(1, 'Board ID is required'),
   groupId: z.string().min(1, 'Group ID is required'),
   status: z.enum([
     TaskStatus.TODO,
@@ -44,6 +45,7 @@ export const UpdateTaskSchema = z.object({
   tag: z.string().min(1, 'Tag is required'),
   name: z.string().min(1, 'Name is required'),
   description: z.string(),
+  boardId: z.string().min(1, 'Board ID is required'),
   groupId: z.string().min(1, 'Group ID is required'),
   status: z.enum([
     TaskStatus.TODO,

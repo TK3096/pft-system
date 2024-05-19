@@ -169,11 +169,12 @@ export const createTask = async (values: z.infer<typeof CreateTaskSchema>) => {
     return { error: 'Invalid fields' }
   }
 
-  const { groupId, name, description, status, remarks, tag } =
+  const { groupId, name, description, status, remarks, tag, boardId } =
     validatedFields.data
   const date = getCurrentDate()
 
   const id = await add(TASKS_COLLECTION, {
+    boardId,
     groupId,
     name,
     description,
@@ -209,11 +210,20 @@ export const updateTask = async (
     return { error: 'Invalid fields' }
   }
 
-  const { groupId, name, description, status, remarks, tag, isDeleted } =
-    validatedFields.data
+  const {
+    groupId,
+    name,
+    description,
+    status,
+    remarks,
+    tag,
+    isDeleted,
+    boardId,
+  } = validatedFields.data
   const date = getCurrentDate()
 
   const updated = await update(TASKS_COLLECTION, id, {
+    boardId,
     groupId,
     name,
     description,

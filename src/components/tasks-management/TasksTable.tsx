@@ -77,8 +77,8 @@ export const TasksTable: React.FC<TasksTableProps> = (
   }
 
   return (
-    <div>
-      <Table>
+    <div className='h-full'>
+      <Table containerClassName='h-fit max-h-[40vw] relative'>
         <TableHeader className='dark:bg-neutral-900'>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

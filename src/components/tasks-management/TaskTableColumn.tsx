@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import { Task, TaskStatus } from '@/types'
+import { Task } from '@/types'
 
 import { MoreVerticalIcon, EditIcon } from 'lucide-react'
 

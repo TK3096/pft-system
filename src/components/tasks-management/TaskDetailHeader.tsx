@@ -15,8 +15,6 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
 
-import { TASK_STATUS } from '@/lib/constant'
-
 interface TaskDetailHeaderProps {
   taskId: string
 }
@@ -33,7 +31,6 @@ export const TaskDetailHeader: React.FC<TaskDetailHeaderProps> = (
 
   const handleEdit = () => {
     if (task && taskBoards) {
-      console.log(taskBoards)
       onOpen('update-task', { task, taskBoards, taskGroups })
     }
   }
