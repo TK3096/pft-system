@@ -13,7 +13,7 @@ export const TaskTagBadge: React.FC<TaskTagBadgeProps> = (
 
   let badgeVariant: 'default' | 'destructive' | 'outline' = 'default'
 
-  switch (tag) {
+  switch (tag.toLowerCase()) {
     case 'bug':
       badgeVariant = 'destructive'
       break
