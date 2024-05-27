@@ -111,7 +111,7 @@ export const UpdateTaskModal: React.FC = () => {
     }
 
     setRemarkFields(newRemarkFields)
-    form.setValue('remarks', newRemarkFields)
+    form.setValue('remarks', newRemarkFields, { shouldDirty: true })
   }
 
   const handleRemarkRemove = (index: number) => {
@@ -119,7 +119,7 @@ export const UpdateTaskModal: React.FC = () => {
     const filter = newRemarkFields.filter((_, i) => i !== index)
 
     setRemarkFields(filter)
-    form.setValue('remarks', filter)
+    form.setValue('remarks', filter, { shouldDirty: true })
   }
 
   const handleChangeGroup = (
@@ -163,6 +163,7 @@ export const UpdateTaskModal: React.FC = () => {
 
   const handleClose = () => {
     form.reset()
+    setRemarkFields([''])
     onClose()
   }
 

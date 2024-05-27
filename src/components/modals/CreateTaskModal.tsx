@@ -127,6 +127,7 @@ export const CreateTaskModal: React.FC = () => {
 
   const handleClose = () => {
     form.reset()
+    setRemarkFields([''])
     onClose()
   }
 
